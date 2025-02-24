@@ -1,0 +1,16 @@
+{
+  "apicodes": {
+    "1000": "Un utilisateur avec cet email existe déjà.",
+    "1001": "Identifiants incorrects.",
+    "1002": "Votre compte n'est pas vérifié. Veuillez vérifier votre boite mail",
+    "1003": "Email envoyé avec succès",
+    "1004": "Mot de passe mis à jour avec succès",
+    "1005": "Erreur lors de l'inscription du parent",
+    "1006": "Cet utilisateur n'existe pas",
+    "1007": "Token expiré",
+    "1008": "Token invalide",
+    "1009": "Connexion échouée",
+    "1010": "une erreur inattendue s'est produite"
+  },
+  "register_successfull": "Votre compte a été crée avec succès. Veuillez consulter votre boite mail pour valider votre compte"
+}
