@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const LoginSchema = z.object({
     email: z
-    .string()
+    .string({message: "Email is required"})
     .email({ message: "Adresse email non valide" }),
     rememberMe: z.boolean().default(false),
-    password: z.string(),
+    password: z.string({message: "Password is required"}),
 });
 export type LoginSchema = z.infer<typeof LoginSchema>;
 

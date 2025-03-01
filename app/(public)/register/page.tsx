@@ -38,7 +38,7 @@ const SignUp = () => {
         toast.success(t.register_successfull)
         router.push("/login")
       } else if (createResponse.status === "failure") {
-        throw new Error(createResponse.data);
+        throw createResponse.data;
       }
     } catch (error) {
       handleError({ error, message: t.apicodes[1010], dict: t });
@@ -115,7 +115,7 @@ const SignUp = () => {
           <Button
             onClick={handleSubmit(onSubmit)}
             className='w-full'
-            isLoading={loading}
+            loading={loading}
           >
             S&apos;inscrire
           </Button>

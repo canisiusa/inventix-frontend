@@ -1,16 +1,27 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { NavUser } from "@/components/app-sidebar/nav-user"
+import { PolicyModal } from "@/components/modals/PolicyModal"
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
+import { authOptions } from "@/lib/config/nextauth"
 import { AlertTriangle, Bell, Search, Settings } from "lucide-react"
+import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
 import { ReactNode } from "react"
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default async function DashboardLayout({ children }: { children: ReactNode }) {
+  const session = await getServerSession(authOptions);
+
+
+  if (!session) {
+    redirect("/login");
+  }
   return (
     <>
       <Prompt />
+      <PolicyModal />
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset className="bg-sidebar">
@@ -27,14 +38,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <Bell color="white" strokeWidth={1} />
               </div>
               <div className="h-6 w-px bg-[#516f90]"></div>
-              <NavUser user={{
-                name: "shadcn",
-                email: "m@example.com",
-                avatar: "/avatars/shadcn.jpg",
-              }} />
+              <NavUser />
             </div>
           </header>
-          <div className="flex-1 p-4 pt-0 bg-[#f6f8fa] rounded-tl-md">
+          <div className="h-[calc(100svh-2.75rem)] p-4 pt-0 bg-[#f6f8fa] rounded-tl-md overflow-scroll">
             {children}
           </div>
         </SidebarInset>

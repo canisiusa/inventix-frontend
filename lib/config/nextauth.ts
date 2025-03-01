@@ -2,7 +2,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { AuthOptions } from "next-auth";
 
-const apiSuffix = process.env.NEXT_PUBLIC_API_URL;
+const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -19,7 +19,7 @@ export const authOptions: AuthOptions = {
           const { email, password } = credentials;
 
           // Login request
-          const loginResponse = await fetch(`${apiSuffix}/v1/users/login`, {
+          const loginResponse = await fetch(`${apiSuffix}/auth/login`, {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: {
@@ -27,37 +27,38 @@ export const authOptions: AuthOptions = {
             },
           });
 
-          if (loginResponse.status !== 200) {
-            console.log("Login failed:", await loginResponse.json());
+          const backendTokens = await loginResponse.json();
+
+
+          if (!loginResponse.ok) {
+            console.log("Login failed:", backendTokens);
 
             return null;
           }
 
-          const backendTokens = await loginResponse.json();
 
           // Fetch user info
-          const userResponse = await fetch(`${apiSuffix}/users/me`, {
+          const userResponse = await fetch(`${apiSuffix}/user/current`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${backendTokens.token}`,
+              Authorization: `Bearer ${backendTokens.accessToken}`,
             },
           });
 
-          if (userResponse.status !== 201) {
-            console.log("Get user failed:", await userResponse.json());
+          const user = await userResponse.json();
 
+          if (!userResponse.ok) {
+            console.log("Get user failed:", user);
             return null;
           }
 
-          const user = await userResponse.json();
 
           return {
             user,
             backendTokens: {
-              accessToken: backendTokens.token,
+              accessToken: backendTokens.accessToken,
               refreshToken: backendTokens.refreshToken,
-              expiresAt: backendTokens.number,
             },
           } as any;
         } catch (error) {
@@ -67,13 +68,13 @@ export const authOptions: AuthOptions = {
         }
       },
     }),
+    
   ],
   pages: {
     signIn: "/",
     newUser: "/",
     signOut: "/",
   },
-
   callbacks: {
     async jwt({ token, user, account }) {
       if (account && user) {

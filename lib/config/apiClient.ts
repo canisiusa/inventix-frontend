@@ -1,6 +1,9 @@
+"use server"
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { getServerSession } from "next-auth";
+import { authOptions } from "./nextauth";
+import { cookies } from "next/headers"; // Utiliser les cookies pour stocker le token
 import axios from "axios";
-import { getSession, signIn, signOut } from "next-auth/react";
 
 let isRefreshing = false;
 let failedQueue: any[] = [];
@@ -17,30 +20,24 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Crée une instance Axios
+// Instance Axios
 export const apiClient = axios.create();
 
 // Intercepteur de requêtes pour ajouter le token
 apiClient.interceptors.request.use(
   async (config) => {
-    const session = await getSession();
-
-    if (session && session.backendTokens.accessToken) {
+    const session = await getServerSession(authOptions);
+    if (session && session.backendTokens?.accessToken) {
       config.headers.Authorization = `Bearer ${session.backendTokens.accessToken}`;
     }
-
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
-// Intercepteur de réponses pour gérer le refresh token
+// Intercepteur de réponse pour gérer le refresh token
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
@@ -51,46 +48,49 @@ apiClient.interceptors.response.use(
         })
           .then((token) => {
             originalRequest.headers.Authorization = `Bearer ${token}`;
-
             return axios(originalRequest);
           })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
+          .catch((err) => Promise.reject(err));
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const session = await getSession();
-
-      if (!session || !session.backendTokens.refreshToken) {
-        await signOut();
-
-        return Promise.reject(error);
-      }
-
       try {
-        const response = await axios.post("/api/auth/refresh", {
+        const session = await getServerSession(authOptions);
+
+        if (!session || !session.backendTokens?.refreshToken) {
+          (await cookies()).delete("next-auth.session-token"); // Supprime la session en cas d'échec
+
+          return Promise.reject(error);
+        }
+
+        const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+        const response = await axios.post(`${apiSuffix}/auth/refresh`, {
           refreshToken: session.backendTokens.refreshToken,
         });
 
-        const newToken = response.data.accessToken;
+        const newAccessToken = response.data.accessToken;
 
-        // Mettre à jour le token dans la session
-        await signIn("credentials", {
-          redirect: false,
-          accessToken: newToken,
-          refreshToken: session.backendTokens.refreshToken,
-        });
+        // 🔹 Mettre à jour le cookie de session
+        (await
+          // 🔹 Mettre à jour le cookie de session
+          cookies()).set("next-auth.session-token", newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+          });
 
-        processQueue(null, newToken);
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        processQueue(null, newAccessToken);
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
         return axios(originalRequest);
       } catch (err) {
+        console.log("Refresh token failed:", err);
         processQueue(err, null);
-        await signOut(); // Si le refresh échoue, déconnecte l'utilisateur
+
+        (await cookies()).delete("next-auth.session-token"); // Supprime la session en cas d'échec
 
         return Promise.reject(err);
       } finally {
@@ -99,7 +99,7 @@ apiClient.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default apiClient;

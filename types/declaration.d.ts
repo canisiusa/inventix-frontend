@@ -1,18 +1,42 @@
 declare module "next-auth" {
   interface Session {
     user: {
-      email: string;
-      firstname: string;
-      lastname: string;
       id: string;
-      phoneNumber: string;
+      name: string;
+      email: string;
+      emailVerified: boolean;
+      acceptTerms: boolean;
       createdAt: Date;
       updatedAt: Date;
+      companiesUser: {
+        id: string;
+        userId: string;
+        companyId: string;
+        roleId: string;
+        createdAt: Date;
+        updatedAt: Date;
+        company: {
+          id: string;
+          name: string;
+          description: null;
+          createdAt: Date;
+          updatedAt: Date;
+        };
+        role: {
+          id: string;
+          name: string;
+          permissions: string[];
+          companyId: string;
+          isOwner: boolean;
+          isDefault: boolean;
+          createdAt: Date;
+          updatedAt: Date;
+        };
+      }[];
     };
     backendTokens: {
       accessToken: string;
       refreshToken: string;
-      expiresAt: Date;
     };
   }
 }
@@ -22,19 +46,42 @@ import { DefaultJWT } from "next-auth/jwt";
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     user: {
-      email: string;
-      firstname: string;
-      lastname: string;
       id: string;
-      phoneNumber: string;
+      name: string;
+      email: string;
+      emailVerified: boolean;
+      acceptTerms: boolean;
       createdAt: Date;
       updatedAt: Date;
+      companiesUser: {
+        id: string;
+        userId: string;
+        companyId: string;
+        roleId: string;
+        createdAt: Date;
+        updatedAt: Date;
+        company: {
+          id: string;
+          name: string;
+          description: null;
+          createdAt: Date;
+          updatedAt: Date;
+        };
+        role: {
+          id: string;
+          name: string;
+          permissions: string[];
+          companyId: string;
+          isOwner: boolean;
+          isDefault: boolean;
+          createdAt: Date;
+          updatedAt: Date;
+        };
+      }[];
     };
-
     backendTokens: {
       accessToken: string;
       refreshToken: string;
-      expiresAt: Date;
     };
   }
 }

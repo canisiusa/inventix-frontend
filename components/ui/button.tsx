@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
-import { DotLoader} from "react-spinners"
+import { RefreshCw } from "lucide-react"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -37,25 +37,33 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean,
-  isLoading?: boolean,
+  loading?: boolean,
+  fullWidth?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, isLoading = false, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, loading = false, fullWidth, disabled, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+
+    const widthStyles = fullWidth ? "w-full" : "";
+    const isDisabled = disabled || loading;
+
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }), "flex items-center gap-2")}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          widthStyles,
+        )}
         ref={ref}
-        disabled={props.disabled || isLoading}
+        disabled={isDisabled}
         {...props}
       >
-        {isLoading ? (
-          <DotLoader color="currentColor" size={14} />
+        {loading ? (
+          <RefreshCw color="currentColor" size={14} className="animate-spin" />
         ) : null}
-        {props.children}
+       <span className={loading ? "opacity-15" : ""}>{props.children}</span>
       </Comp>
     )
   }

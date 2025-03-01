@@ -51,7 +51,7 @@ const AppInput = forwardRef<HTMLInputElement, InputPropTypes>(
       prefixContent,
       suffixContent,
       onFocus,
-      variant = "gray",
+      variant = "primary",
       containerClassName,
       inputContainerClassName,
     },
@@ -94,10 +94,11 @@ const AppInput = forwardRef<HTMLInputElement, InputPropTypes>(
         <div className="w-full flex-col justify-start items-start gap-1">
           <div
             className={cn(
-              "w-full",
+              "w-full transition-all duration-200 px-4 py-2 rounded-lg gap-2",
               variablesInput[variant],
               inputContainerClassName,
-              disabled && "cursor-not-allowed bg-[var(--bg-disabled)]"
+              disabled && "cursor-not-allowed bg-[var(--bg-disabled)] ",
+              errorText ? "!border-red-300 !border !focus:border-red-500 focus:!ring-1 focus:!ring-red-500" : ""
             )}
           >
             {prefixContent && <div>{prefixContent}</div>}
@@ -170,11 +171,8 @@ const Container = styled.div`
   .default-input {
     font-weight: normal;
     display: flex;
-    padding: 0.25rem 0.375rem;
     align-items: center;
-    gap: var(--spacing-md);
     align-self: stretch;
-    border-radius: 0.375rem;
     color: #475569;
   }
 

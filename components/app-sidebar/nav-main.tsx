@@ -19,77 +19,77 @@ import {
 } from "@/components/ui/sidebar"
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname, useRouter } from "next/navigation"
 
 export function NavMain() {
-  const  items:{
+  const pathname = usePathname();
+  const router = useRouter();
+  const items: {
     title: string
     url: string
     icon?: React.ReactNode
     isActive?: boolean
     items?: {
       title: string
-      url: string
+      url: string,
+      isActive?: boolean
     }[]
   }[] = [
-    {
-      title: "Overview",
-      url: "/overview",
-      icon: <Image src="/overview.png" width={20} height={20} alt="" />,
-      isActive: true,
-    },
-    {
-      title: "Inventory",
-      url: "#",
-      icon: <Image src="/inventory.png" width={20} height={20} alt="" />,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Reports",
-      url: "#",
-      icon: <Image src="/reports.png" width={20} height={20} alt="" />,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Suppliers",
-      url: "#",
-      icon: <Image src="/suppliers.png" width={20} height={20} alt="" />,
-    },
-    {
-      title: "Orders",
-      url: "#",
-      icon: <Image src="/orders.png" width={20} height={20} alt="" />,
-    },
-  ]
+      {
+        title: "Overview",
+        url: "/overview",
+        icon: <Image src="/overview.png" width={20} height={20} alt="" />,
+        isActive: pathname === "/overview",
+      },
+      {
+        title: "Inventory",
+        url: "/inventory",
+        icon: <Image src="/inventory.png" width={20} height={20} alt="" />,
+        isActive: pathname.startsWith("/inventory"),
+        items: [
+          {
+            title: "Products",
+            url: "/inventory/products",
+            isActive: pathname === "/inventory/products",
+          },
+          {
+            title: "Warehouses",
+            url: "/inventory/warehouses",
+            isActive: pathname === "/inventory/warehouses",
+          },
+        ],
+      },
+      {
+        title: "Reporting",
+        url: "/reporting",
+        icon: <Image src="/reports.png" width={20} height={20} alt="" />,
+        isActive: pathname.startsWith("/reporting"),
+        items: [
+          {
+            title: "KPI",
+            url: "/reporting/kpi",
+            isActive: pathname === "/reporting/kpi",
+          },
+          {
+            title: "Segmentation",
+            url: "/reporting/segmentation",
+            isActive: pathname === "/reporting/segmentation",
+          },
+        ],
+      },
+      {
+        title: "Suppliers",
+        url: "/suppliers",
+        icon: <Image src="/suppliers.png" width={20} height={20} alt="" />,
+        isActive: pathname === "/suppliers",
+      },
+      {
+        title: "Orders",
+        url: "/orders",
+        icon: <Image src="/orders.png" width={20} height={20} alt="" />,
+        isActive: pathname === "/orders",
+      },
+    ]
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -103,23 +103,28 @@ export function NavMain() {
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton tooltip={item.title} isActive={item.isActive}>
+                  {item.icon && item.icon}
                   {
                     item.items ?
                       <>
-                        {item.icon && item.icon}
-                        <span>{item.title}</span>
-                        {
-                          item.items ?
-                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" /> : null
-                        }
+                        <span
+                          onClick={() => {
+                            router.push(item.url)
+                          }}
+                        >
+                          {item.title}
+                        </span>
                       </> :
                       <>
-                        {item.icon && item.icon}
                         <Link href={item.url}>
                           <span>{item.title}</span>
                         </Link>
                       </>
+                  }
+                  {
+                    item.items ?
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" /> : null
                   }
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -128,7 +133,10 @@ export function NavMain() {
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <Link href={subItem.url}>
+                        <Link
+                          href={subItem.url}
+                          className={subItem.isActive ? "text-[#70c3c5] hover:text-[#70c3c5] pointer-events-none hover:bg-transparent cursor-default" : ""}
+                        >
                           <span>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>

@@ -3,20 +3,30 @@
 import AppInput from '@/components/inputs/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import Link from 'next/link';
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from '@/lib/schemas/auth.schemas';
+import { sendResetPwdEmail } from '@/lib/actions/auth';
+import { toast } from 'sonner';
+import { handleError } from '@/lib/utils';
+import { useLocalization } from '@/providers/localization-provider';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 
 const SignIn = () => {
 
   const [loading, setloading] = useState(false);
+  const { t } = useLocalization();
+  const router = useRouter()
 
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
+    trigger,
     control,
     formState: { errors },
   } = useForm<LoginSchema>({
@@ -28,20 +38,35 @@ const SignIn = () => {
   const onSubmit: SubmitHandler<LoginSchema> = async (payload) => {
     try {
       setloading(true);
-      const { data } = await signIn({
+      const result = await signIn("credentials", {
         email: payload.email,
         password: payload.password,
+        redirect: false,
       });
-      const jsondata = {
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-        rememberMe: payload.rememberMe,
-      };
+      if (result?.ok) {
+        router.push('/overview')
+      } else {
+        throw result?.error;
+      }
+    } catch (error) {
+      console.log(error)
+      handleError({ error, message: "Login failed", dict: t });
+    } finally {
+      setloading(false);
+    }
+  };
 
-      // setTokens(jsondata);
-
-    } catch {
-      //
+  const handlePasswordReset = async () => {
+    try {
+      setloading(true);
+      const result = await sendResetPwdEmail({ email: getValues().email });
+      if (result.status === 'success') {
+        toast.success("Email envoyé avec succès",);
+      } else {
+        throw result.data;
+      }
+    } catch (error) {
+      handleError({ error, message: "An error occured", dict: t });
     } finally {
       setloading(false);
     }
@@ -67,14 +92,11 @@ const SignIn = () => {
             <div className="self-stretch text-center text-gray-500 text-base font-normal">Welcome back! Please enter your details.</div>
           </div>
         </div>
-        <form className="w-96 flex-col justify-center items-center gap-6 flex">
+        <div className="w-96 flex-col justify-center items-center gap-6 flex">
           <AppInput
             label="Email"
             type="email"
-            variant={Object.keys(errors).length > 0 ? "error" : "primary"}
-            containerClassName="w-full"
-            inputClassName="placeholder-gray-300 h-6"
-            labelClassName="text-slate-700 text-sm font-medium "
+            variant={errors.email?.message ? "error" : "primary"}
             placeholder="ex : john.doe@roomee.io"
             errorText={
               errors.email?.message
@@ -89,28 +111,21 @@ const SignIn = () => {
           />
           <AppInput
             label="Mot de passe"
-            containerClassName="w-full"
-            inputClassName="placeholder-gray-300"
-            variant={Object.keys(errors).length > 0 ? "error" : "primary"}
+            variant={errors.password?.message ? "error" : "primary"}
             type="password"
-            labelClassName="text-slate-700 text-sm font-medium"
-            placeholder="********"
+            placeholder="---------"
             errorText={
-              Object.keys(errors).length > 0 ? " " : ""
+              errors.password?.message
             }
             hooksformvalidation={{
               ...register("password", {
-                validate: (value: string) => {
-                  if (!value) return "Champs requis";
-                  return true;
-                },
               }),
             }}
             onChange={(e) => {
               setValue("password", e.target.value);
             }}
           />
-          <div className="self-stretch justify-between items-center inline-flex pb-8">
+          <div className="self-stretch justify-between items-center inline-flex ">
             <div className='flex items-center gap-2'>
               <Controller
                 name="rememberMe"
@@ -125,18 +140,29 @@ const SignIn = () => {
               <small>Se souvenir de moi</small>
             </div>
 
-            <Link
-              className="text-blue-700 text-sm-medium" href={''}            >
+            <button
+              className="text-blue-700 text-sm"
+              onClick={() => {
+                if (getValues().email) {
+                  handlePasswordReset()
+                } else {
+                  trigger('email')
+                }
+              }}
+            >
               Mot de passe oublié
-            </Link>
+            </button>
           </div>
           <Button
-          className='w-full'
+            fullWidth
             onClick={handleSubmit(onSubmit)}
-            disabled={loading}
+            loading={loading}
           >Se connecter</Button>
-        </form>
-
+        </div>
+        <div className="justify-center items-center gap-3 inline-flex">
+          <div className="text-neutral-800 text-sm font-normal">Pas encore de compte ?</div>
+          <Link href={"/register"} className="text-primary text-sm font-medium">Inscrivez-vous</Link>
+        </div>
       </div>
     </div>
   )

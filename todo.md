@@ -13,6 +13,9 @@
 - **Gestion des retours et anomalies** : Détection et gestion automatisée des retours anormaux et erreurs d’inventaire.
 - **Répartition intelligente des stocks** : Optimisation de la distribution entre plusieurs entrepôts pour minimiser les coûts de livraison.
 
+
+
+
 ### 📊 **4. Analyse et Reporting Avancé**
 - **Tableaux de bord intelligents** : Indicateurs clés de performance (KPI) comme la couverture de stock, le taux de rotation ou les coûts liés aux stocks.
 - **Détection des anomalies** : Identification des écarts entre les prévisions et les stocks réels.
