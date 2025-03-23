@@ -16,10 +16,10 @@ interface TableProps {
   maxHeightClassName?: string;
   columnWidths?: number[]; // Prop for column widths, e.g. [100, 200, 150]
   tableWidth?: number; // Prop for column widths, e.g. [100, 200, 150]
-  scrollDivRef?: React.Ref<HTMLDivElement>
+  scrollDivRef?: React.Ref<HTMLDivElement> // Peut servir pour connaitre la position du scroll pour l'infinite scrolling
 }
 
-const RoomeeTable: React.FC<TableProps> = ({
+const AppTable: React.FC<TableProps> = ({
   header,
   body,
   loading,
@@ -42,10 +42,8 @@ const RoomeeTable: React.FC<TableProps> = ({
               <col key={index} style={{ width: `${width}px` }} />
             ))}
           </colgroup>
-          <TableHeader className="w-full">
-            <TableRow className="bg-blue-100 hover:bg-blue-200">
-              {header}
-            </TableRow>
+          <TableHeader className="bg-primary-100 hover:bg-primary-200 text-sm !text-primary-900 font-semibold ">
+            {header}
           </TableHeader>
         </table>
       </div>
@@ -59,7 +57,7 @@ const RoomeeTable: React.FC<TableProps> = ({
           `w-[${tableWidth}px]`
         )}
       >
-        <table className="w-full border-gray-200 bg-white border-2 border-t-0 rounded-b-lg overflow-hidden shadow-md shadow-blue-100 mb-12">
+        <table className="w-full border-gray-200 bg-white border-2 border-t-0 rounded-b-lg overflow-hidden mb-12">
           <TableBody>
             {loading ? (
               <TableRow className="w-full !min-h-52 flex items-center justify-center gap-2">
@@ -116,4 +114,4 @@ const Container = styled.div`
   }
 `;
 
-export default RoomeeTable;
+export default AppTable;

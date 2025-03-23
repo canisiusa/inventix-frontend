@@ -57,6 +57,11 @@ export function NavMain() {
             url: "/inventory/warehouses",
             isActive: pathname === "/inventory/warehouses",
           },
+          {
+            title: "Categories",
+            url: "/inventory/categories",
+            isActive: pathname === "/inventory/categories",
+          },
         ],
       },
       {
@@ -135,7 +140,7 @@ export function NavMain() {
                       <SidebarMenuSubButton asChild>
                         <Link
                           href={subItem.url}
-                          className={subItem.isActive ? "text-[#70c3c5] hover:text-[#70c3c5] pointer-events-none hover:bg-transparent cursor-default" : ""}
+                          className={subItem.isActive ? "!text-primary-500 hover:!text-primary-500 font-medium pointer-events-none hover:bg-transparent cursor-default" : ""}
                         >
                           <span>{subItem.title}</span>
                         </Link>

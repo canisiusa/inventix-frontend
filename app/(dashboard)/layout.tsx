@@ -11,13 +11,14 @@ import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 import { ReactNode } from "react"
 
+
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const session = await getServerSession(authOptions);
 
-
   if (!session) {
-    redirect("/login");
+    redirect("/login")
   }
+
   return (
     <>
       <Prompt />
@@ -26,7 +27,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         <AppSidebar />
         <SidebarInset className="bg-sidebar">
           <header className="flex justify-between bg-sidebar h-11 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-            <div className="flex items-center gap-2 cursor-pointer text-sm px-4 h-8 w-96 text-white font-light rounded-lg bg-[#425b76]">
+            <div className="flex items-center gap-2 cursor-pointer text-sm px-4 h-8 w-52 xl:w-96 text-white font-light rounded-lg bg-[#425b76]">
               <div className="flex items-center">
                 <Search className="h-3" />
                 Rechercher sur Inventix

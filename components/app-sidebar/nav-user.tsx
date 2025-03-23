@@ -25,11 +25,30 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { signOut, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { logoutUser } from "@/lib/server-actions/auth"
+import { handleError } from "@/lib/utils"
+import { useLocalization } from "@/providers/localization-provider"
 
 export function NavUser() {
 
   const { data: session } = useSession();
   const router = useRouter();
+  const { t } = useLocalization();
+
+
+  const handleLogout = async () => {
+    try {
+      const resp = await logoutUser();
+      if (resp.status === "success") {
+        signOut({ callbackUrl: "/" });
+      } else if (resp.status === "failure") {
+        throw resp.data;
+      }
+    } catch (error) {
+      handleError({ error, message: "Failed to log out", dict: t });
+
+    }
+  }
 
   return (
     <DropdownMenu>
@@ -92,9 +111,7 @@ export function NavUser() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => {
-            signOut({ callbackUrl: "/" });
-          }}
+          onClick={handleLogout}
         >
           <LogOut />
           Log out

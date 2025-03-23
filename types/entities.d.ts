@@ -18,6 +18,17 @@ interface IpLocation {
   is_eu: boolean;
 }
 
+
+interface PaginationAPIResponseData<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 interface IpInfo {
   ip: string;
   type: 'ipv4' | 'ipv6';
@@ -37,4 +48,55 @@ interface IpInfo {
   ip_routing_type: string;
   connection_type: string;
   location: IpLocation;
+}
+
+interface Overview {
+  salesOverview: SalesOverview;
+  inventorySummary: InventorySummary;
+  purchaseOverview: PurchaseOverview;
+  productSummary: ProductSummary;
+}
+
+interface InventorySummary {
+  quantityInHand: number;
+  toBeReceived: number;
+}
+
+interface ProductSummary {
+  numberOfSuppliers: number;
+  numberOfCategories: number;
+}
+
+interface PurchaseOverview {
+  totalPurchases: number;
+  cost: number;
+  cancelled: number;
+  returned: number;
+}
+
+interface SalesOverview {
+  totalSales: number;
+  revenue: number;
+  profit: number;
+  cost: number;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  unit: string;
+  currentStock: number;
+  minimumStock: number;
+  price: number;
+  expiryDate?: string;
+  supplierId: string;
+  stock: number; // Added for Reports page
+}
+
+
+ interface Category {
+  id: string;
+  name: string;
+  color: string;
 }

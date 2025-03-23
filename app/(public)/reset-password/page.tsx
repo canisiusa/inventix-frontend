@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { handleError } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocalization } from "@/providers/localization-provider";
-import { sendResetPwd } from "@/lib/actions/auth";
+import { sendResetPwd } from "@/lib/server-actions/auth";
 import { Button } from "@/components/ui/button";
 import AppInput from "@/components/inputs/input";
 

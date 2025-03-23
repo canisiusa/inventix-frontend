@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import CredentialsProvider from "next-auth/providers/credentials";
 import { AuthOptions } from "next-auth";
+import { saveAccessToken, saveRefreshToken } from "../cookieHelper";
 
 const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -53,7 +54,8 @@ export const authOptions: AuthOptions = {
             return null;
           }
 
-
+          saveAccessToken(backendTokens.accessToken);
+          saveRefreshToken(backendTokens.refreshToken);
           return {
             user,
             backendTokens: {
@@ -68,17 +70,22 @@ export const authOptions: AuthOptions = {
         }
       },
     }),
-    
   ],
   pages: {
-    signIn: "/",
+    signIn: "/login",
     newUser: "/",
     signOut: "/",
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
+      // Si un utilisateur se connecte, stocke ses tokens
       if (account && user) {
         return user as any;
+      }
+
+      // ✅ Mettre à jour les tokens après un refresh
+      if (trigger === "update" && session?.backendTokens) {
+        token.backendTokens = session.backendTokens;
       }
 
       return token;
@@ -91,7 +98,7 @@ export const authOptions: AuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+ // secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },

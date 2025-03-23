@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Lexend_Deca, Noto_Sans, Plus_Jakarta_Sans, Raleway, Varela, Varta } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers";
 import { Toaster } from "@/components/ui/sonner";

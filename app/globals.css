@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -11,8 +10,8 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 181.41deg 42.29% 60.59%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 178 45% 60%; /* hsl de #70c3c5 */
+    --primary-foreground: 210 20% 20%; /* Une couleur foncée pour le texte */
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
@@ -30,7 +29,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --sidebar-background: 210.86deg 28% 24.51%;
+    --sidebar-background: 261deg 100% 9%; /* 210.86deg 28% 24.51% */
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -84,7 +83,6 @@
   }
 }
 
-
 :root {
   --white: #ffffff;
   --black: #000000;
@@ -96,10 +94,7 @@
 
   --warning-500: #f79009;
 
-
   --success-500: #17b26a;
-
-
 
   --border-primary: #d0d5dd;
 
@@ -148,10 +143,6 @@
   --focus-ring: var(--brand-500);
   --focus-ring-error: var(--error-500);
 }
-
-
-
-
 
 @layer base {
   * {

@@ -20,14 +20,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 - **Historique des mouvements de stock** (journal des entrées, sorties et ajustements)
 - **Gestion des emplacements** (stocks multi-entrepôts, rayons, magasins)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
 ### 📦 Gestion des entrées et sorties
 - **Réception des livraisons** (scan QR code / code-barres pour enregistrer les produits entrants)
 - **Gestion des commandes clients** (déduction automatique des stocks)
 - **Gestion des retours et remboursements** (réintégration ou suppression des produits retournés)
 - **Transfert de stock** (entre différents entrepôts ou magasins)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
 ### 📊 Tableau de bord & reporting
 - **Vue d’ensemble du stock en temps réel**
 - **Rapports sur les ventes, les stocks et les pertes**
@@ -66,5 +66,3 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - **Synchronisation en temps réel entre plusieurs utilisateurs**
 - **Gestion des stocks multi-sites** (plusieurs magasins ou entrepôts)
 - **Intégration avec des plateformes e-commerce** (Shopify, WooCommerce, Magento, etc.)
-#70c3c5
-#ce3126

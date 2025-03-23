@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getServerSession } from "next-auth";
 import { authOptions } from "./nextauth";
-import { cookies } from "next/headers"; // Utiliser les cookies pour stocker le token
 import axios from "axios";
+import { getAccessToken, getRefreshToken,saveAccessToken } from "../cookieHelper";
+import { cookies } from "next/headers";
 
 let isRefreshing = false;
 let failedQueue: any[] = [];
@@ -26,9 +27,10 @@ export const apiClient = axios.create();
 // Intercepteur de requêtes pour ajouter le token
 apiClient.interceptors.request.use(
   async (config) => {
-    const session = await getServerSession(authOptions);
-    if (session && session.backendTokens?.accessToken) {
-      config.headers.Authorization = `Bearer ${session.backendTokens.accessToken}`;
+    
+    const accessToken = await getAccessToken();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken.value}`;
     }
     return config;
   },
@@ -58,8 +60,9 @@ apiClient.interceptors.response.use(
 
       try {
         const session = await getServerSession(authOptions);
+        const refreshToken = await getRefreshToken();
 
-        if (!session || !session.backendTokens?.refreshToken) {
+        if (!session || !refreshToken) {
           (await cookies()).delete("next-auth.session-token"); // Supprime la session en cas d'échec
 
           return Promise.reject(error);
@@ -68,19 +71,14 @@ apiClient.interceptors.response.use(
         const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
 
         const response = await axios.post(`${apiSuffix}/auth/refresh`, {
-          refreshToken: session.backendTokens.refreshToken,
+          refreshToken: refreshToken.value,
         });
 
         const newAccessToken = response.data.accessToken;
 
-        // 🔹 Mettre à jour le cookie de session
-        (await
-          // 🔹 Mettre à jour le cookie de session
-          cookies()).set("next-auth.session-token", newAccessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            path: "/",
-          });
+        console.log("Mettre à jour le accessToken dans next-auth");
+        // 🔹 Mettre à jour le accessToken dans next-auth
+        await saveAccessToken(newAccessToken);
 
         processQueue(null, newAccessToken);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

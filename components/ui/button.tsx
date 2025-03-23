@@ -11,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          "bg-primary text-white shadow hover:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
@@ -53,6 +53,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(
+          loading ? "opacity-15" : "",
           buttonVariants({ variant, size, className }),
           widthStyles,
         )}
@@ -63,7 +64,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <RefreshCw color="currentColor" size={14} className="animate-spin" />
         ) : null}
-       <span className={loading ? "opacity-15" : ""}>{props.children}</span>
+       {props.children}
       </Comp>
     )
   }

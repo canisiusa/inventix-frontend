@@ -1,5 +1,5 @@
 "use client";
-import { editProfile, getCurrentUser } from "@/lib/actions/user";
+import { editProfile, getCurrentUser } from "@/lib/server-actions/user";
 import { UpdateUserSchema } from "@/lib/schemas/user.schemas";
 import { handleError } from "@/lib/utils";
 import { useLocalization } from "@/providers/localization-provider";

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import StatusCard from './_components/StatusCard';
 import { Button } from '@/components/ui/button';
-import { confirmEmail, resendConfirmationEmail } from '@/lib/actions/auth';
+import { confirmEmail, resendConfirmationEmail } from '@/lib/server-actions/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import "./_components/style.css"
 
