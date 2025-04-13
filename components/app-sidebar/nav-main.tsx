@@ -92,7 +92,19 @@ export function NavMain() {
         title: "Orders",
         url: "/orders",
         icon: <Image src="/orders.png" width={20} height={20} alt="" />,
-        isActive: pathname === "/orders",
+        isActive: pathname.startsWith("/orders"),
+        items: [
+          {
+            title: "Suppliers",
+            url: "/orders/suppliers",
+            isActive: pathname === "/orders/suppliers",
+          },
+          {
+            title: "Customers",
+            url: "/orders/customers",
+            isActive: pathname === "/orders/customers",
+          }
+        ],
       },
     ]
   return (

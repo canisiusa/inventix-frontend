@@ -57,7 +57,7 @@ const AppTable: React.FC<TableProps> = ({
           `w-[${tableWidth}px]`
         )}
       >
-        <table className="w-full border-gray-200 bg-white border-2 border-t-0 rounded-b-lg overflow-hidden mb-12">
+        <table className="w-full border-gray-200 bg-white border-2 border-t-0 rounded-b-lg overflow-hidden">
           <TableBody>
             {loading ? (
               <TableRow className="w-full !min-h-52 flex items-center justify-center gap-2">

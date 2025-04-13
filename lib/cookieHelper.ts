@@ -35,3 +35,11 @@ export const isAccessToken = async () => {
   const accessToken = await getAccessToken();
   return !!accessToken;
 }
+
+export const changeLocale = async (lang: string) => {
+  const cookie = await cookies();
+  cookie.set("locale", lang, {
+    path: "/",
+    maxAge: 60 * 60 * 24 // 24 heures
+  });
+}

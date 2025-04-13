@@ -1,5 +1,6 @@
 'use server';
 
+import { PaginationAPIResponseData, Product } from "@/types/entities";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import apiClient from "../config/apiClient";
 

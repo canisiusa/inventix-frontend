@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 import { LocalizationProvider } from "@/providers/localization-provider";
 import { cookies } from "next/headers";
 import { getDictionary } from "./dictionaries";
+import { Toaster } from "@/components/ui/toaster";
 
 const mainFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -25,13 +26,14 @@ export default async function RootLayout({
   const cookieStore = cookies();
   const locale = (await cookieStore).get('locale')?.value || 'en';
 
-  const dict = await getDictionary(locale);
+  const dict = await getDictionary(locale as LanguageCode);
   return (
     <html lang="en">
       <body
         className={`${mainFont.className} antialiased`}
       >
-        <Toaster richColors closeButton position="top-right" />
+        <Sonner richColors closeButton position="top-right" />
+        <Toaster />
         <Providers>
           <LocalizationProvider dict={dict} lang={locale as LanguageCode}>
             {children}

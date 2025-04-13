@@ -100,3 +100,19 @@ interface Product {
   name: string;
   color: string;
 }
+
+export interface Supplier {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  companyId: string;
+  createdAt: string; // ISO string (Date)
+  updatedAt: string; // ISO string (Date)
+  deletedAt?: string | null; // si soft deleted
+
+  // Relations optionnelles si tu les utilises côté frontend :
+  //products?: Product[]; 
+  //orders?: SupplierOrder[];
+}

@@ -10,7 +10,335 @@
     "1007": "Token expiré",
     "1008": "Token invalide",
     "1009": "Connexion échouée",
-    "1010": "une erreur inattendue s'est produite"
+    "1010": "une erreur inattendue s'est produite",
+    "1011": "Erreur de mise à jour de l'utilisateur",
+    "1012": "Session invalide ou expirée",
+    "1013": "Refresh token invalide ou session expirée",
+    "1014": "Nombre maximum de connexions atteint",
+    "1015": "Impossible de générer un accessToken",
+    "1016": "Erreur de récupération des produits",
+    "1017": "Erreur de création de produit",
+    "1018": "Erreur de mise à jour de produit",
+    "1019": "Erreur de suppression de produit",
+    "1020": "User not found in this company",
+    "1021": "Supplier already exists",
+    "1022": "Supplier not found",
+    "1023": "Error creating supplier",
+    "1024": "Error updating supplier",
+    "1025": "Error deleting supplier",
+    "1026": "Error restoring supplier",
+    "1027": "Error fetching suppliers",
+    "1028": "Error fetching supplier",
+    "1029": "'Company not found'"
   },
-  "register_successfull": "Votre compte a été crée avec succès. Veuillez consulter votre boite mail pour valider votre compte"
+  "register_successfull": "Votre compte a été crée avec succès. Veuillez consulter votre boite mail pour valider votre compte",
+  "active": "Actif",
+  "inactive": "Inactif",
+  "add": "Ajouter",
+  "edit": "Modifier",
+  "delete": "Supprimer",
+  "restore": "Restaurer",
+  "view": "Voir",
+  "navbar": {
+    "features": "Fonctionnalités",
+    "automation": "Automatisation",
+    "mobile": "Mobile",
+    "analysis": "Analyse",
+    "pricing": "Tarifs",
+    "login": "Se connecter",
+    "freeTrial": "Essai gratuit"
+  },
+  "hero": {
+    "title": "Pilotez vos stocks comme un pro.",
+    "subtitle": "La plateforme complète de gestion de stock qui optimise vos inventaires grâce à l'intelligence artificielle.",
+    "demoButton": "Demander une démo",
+    "trialButton": "Essayer gratuitement",
+    "security": "Sécurité garantie",
+    "openAPI": "API ouverte",
+    "predictiveAnalysis": "Analyse prédictive",
+    "optimizedStock": "Stock optimisé",
+    "accuratePredictions": "Prévisions précises",
+    "efficiency": "+47% d'efficacité",
+    "errorReduction": "Réduction des erreurs"
+  },
+  "features": {
+    "title": "Fonctionnalités clés de gestion de stock",
+    "subtitle": "Des outils puissants conçus pour répondre à tous vos besoins de gestion d'inventaire",
+    "productManagement": {
+      "title": "Gestion des produits",
+      "description": "Gérez facilement vos SKUs, variantes, photos et attributs pour une organisation parfaite de votre catalogue."
+    },
+    "realTimeTracking": {
+      "title": "Suivi en temps réel",
+      "description": "Suivez toutes les entrées, sorties et mouvements de stock avec une précision absolue et en temps réel."
+    },
+    "alertsHistory": {
+      "title": "Alertes de stock",
+      "description": "Recevez des notifications automatiques pour les niveaux de stock bas et accédez à l'historique complet des mouvements."
+    },
+    "multiWarehouse": {
+      "title": "Multi-entrepôts",
+      "description": "Gérez plusieurs entrepôts et emplacements de stockage avec une vue d'ensemble claire et centralisée."
+    },
+    "barcodes": {
+      "title": "Codes-barres & QR",
+      "description": "Générez et imprimez des étiquettes avec codes-barres ou QR codes pour un inventaire rapide et sans erreur."
+    },
+    "stockMovements": {
+      "title": "Mouvements de stock",
+      "description": "Facilitez les transferts entre entrepôts et suivez chaque mouvement avec une traçabilité complète."
+    }
+  },
+  "automation": {
+    "title": "Automatisation intelligente",
+    "subtitle": "Réduisez vos tâches manuelles et intégrez vos outils préférés pour une gestion de stock fluide",
+    "autoOrders": {
+      "title": "Commandes automatiques",
+      "subtitle": "Réapprovisionnement intelligent",
+      "description": "Le système déclenche automatiquement des commandes fournisseurs lorsque vos stocks atteignent un seuil critique, personalisable par produit ou catégorie.",
+      "feature1": "Commandes planifiées",
+      "feature2": "Suggestions intelligentes",
+      "feature3": "Suivi des fournisseurs"
+    },
+    "integrations": {
+      "title": "Intégrations complètes",
+      "subtitle": "Connectez tous vos outils",
+      "description": "Intégrez StockSense avec vos systèmes existants : ERP, CRM, e-commerce, comptabilité pour un écosystème sans faille.",
+      "feature1": "Shopify, WooCommerce, Prestashop",
+      "feature2": "SAP, Sage, Microsoft Dynamics",
+      "feature3": "Salesforce, HubSpot, Zoho"
+    },
+    "api": {
+      "title": "API ouverte",
+      "subtitle": "Personnalisation totale",
+      "description": "Notre API RESTful documentée permet d'intégrer facilement StockSense à n'importe quelle application tierce ou développement interne.",
+      "feature1": "Webhooks personnalisables",
+      "feature2": "Documentation complète",
+      "feature3": "Support développeur"
+    }
+  },
+  "mobile": {
+    "title": "Votre stock dans votre poche",
+    "subtitle": "L'application mobile StockSense vous permet de garder le contrôle de votre inventaire où que vous soyez. Consultez, scannez et gérez vos stocks en déplacement.",
+    "stockConsult": {
+      "title": "Consultation mobile",
+      "description": "Accédez à tous vos stocks, commandes et alertes depuis votre smartphone ou tablette, avec une interface optimisée pour mobile."
+    },
+    "scanning": {
+      "title": "Scan intelligent",
+      "description": "Scannez codes-barres et QR codes directement depuis votre smartphone pour ajouter, retirer ou vérifier des produits en quelques secondes."
+    },
+    "notifications": {
+      "title": "Notifications en temps réel",
+      "description": "Recevez des alertes instantanées pour les événements importants : ruptures de stock, livraisons, anomalies détectées."
+    },
+    "downloadIOS": "Télécharger sur iOS",
+    "downloadAndroid": "Télécharger sur Android",
+    "notif": {
+      "title": "Rupture détectée",
+      "description": "Action requise"
+    }
+  },
+  "security": {
+    "title": "Collaboration et sécurité renforcée",
+    "subtitle": "Travaillez en équipe en toute sécurité avec des contrôles d'accès granulaires et une traçabilité complète",
+    "roleManagement": {
+      "title": "Gestion des rôles et permissions",
+      "description": "Définissez précisément qui peut voir et modifier quelles données. Créez des rôles personnalisés adaptés à chaque fonction dans votre entreprise."
+    },
+    "auditHistory": {
+      "title": "Historique et audit complet",
+      "description": "Suivez chaque action réalisée dans le système avec horodatage et identifiant utilisateur pour une traçabilité totale et une responsabilisation accrue."
+    },
+    "authentication": {
+      "title": "Authentification renforcée",
+      "description": "Protection maximale avec authentification à deux facteurs (2FA), SSO et conformité aux normes de sécurité les plus strictes du marché."
+    }
+  },
+  "dashboard": {
+    "title": "Tableaux de bord et rapports personnalisés",
+    "subtitle": "Visualisez toutes vos données clés et prenez des décisions informées grâce à nos tableaux de bord intuitifs et personnalisables.",
+    "realTimeView": {
+      "title": "Vue d'ensemble en temps réel",
+      "description": "Consultez l'état de vos stocks, ventes et commandes sur un tableau de bord centralisé et actualisé en temps réel."
+    },
+    "export": {
+      "title": "Export multi-formats",
+      "description": "Exportez facilement vos données et rapports aux formats CSV, PDF ou Excel pour les partager ou les intégrer dans d'autres outils."
+    },
+    "keyIndicators": {
+      "title": "Indicateurs clés",
+      "description": "Suivez vos KPIs les plus importants : produits les plus vendus, rotation des stocks, valeur d'inventaire, prévisions de rupture."
+    },
+    "viewDashboards": "Voir les tableaux de bord",
+    "salesIncrease": "Ventes +24%",
+    "thisMonth": "Ce mois-ci",
+    "optimalStock": "Stock optimal",
+    "productPercentage": "97% produits"
+  },
+  "analysis": {
+    "title": "Analyse intelligente des données",
+    "subtitle": "Exploitez la puissance de l'intelligence artificielle pour optimiser votre gestion de stock",
+    "advancedStats": {
+      "title": "Statistiques avancées",
+      "description": "Analysez en profondeur vos ventes, retours, ruptures et valeurs de stock avec des visualisations interactives et personnalisables."
+    },
+    "prediction": {
+      "title": "Prédiction de la demande",
+      "description": "Anticipez les pics de vente et évitez les ruptures grâce à nos algorithmes de machine learning qui analysent vos historiques."
+    },
+    "costAnalysis": {
+      "title": "Analyse des coûts et marges",
+      "description": "Calculez automatiquement vos marges brutes et nettes, comparez vos fournisseurs et identifiez les anomalies de coûts."
+    },
+    "customerBehavior": {
+      "title": "Analyse comportementale",
+      "description": "Segmentez vos clients (RFM), attribuez des scores et anticipez leurs achats futurs pour des recommandations pertinentes."
+    },
+    "dashboard": {
+      "title": "Dashboard interactif",
+      "description": "Personnalisez votre expérience d'analyse avec des filtres par date, produit ou entrepôt pour des insights précis et actionnables."
+    },
+    "chatbot": {
+      "title": "Chatbot NLP intégré",
+      "description": "Posez des questions en langage naturel comme 'Quels produits sont en rupture?' et obtenez des réponses instantanées."
+    },
+    "automation": {
+      "title": "Automatisation & alertes intelligentes",
+      "description": "Créez vos propres règles d'automatisation et recevez des alertes personnalisées via Slack, email ou notifications push. Le système apprend de vos habitudes pour des suggestions de plus en plus pertinentes."
+    }
+  },
+  "testimonials": {
+    "title": "Ce que nos clients disent",
+    "subtitle": "Des entreprises de toutes tailles font confiance à StockSense pour optimiser leur gestion de stock",
+    "trustText": "Ils nous font confiance",
+    "quotes": [
+      {
+        "quote": "Depuis que nous utilisons StockSense, nos ruptures de stock ont diminué de 78% et notre rotation s'est améliorée de 24%. L'analyse prédictive nous a permis d'optimiser nos commandes et de réduire nos coûts de stockage.",
+        "author": "Marie Durand",
+        "position": "Directrice Supply Chain, RetailPro"
+      },
+      {
+        "quote": "La flexibilité de StockSense nous a permis d'adapter le système à nos processus spécifiques. L'intégration avec notre ERP a été rapide et le support technique est exceptionnel.",
+        "author": "Thomas Moreau",
+        "position": "CTO, LogiTech Solutions"
+      },
+      {
+        "quote": "Le chatbot intégré est révolutionnaire. Je peux obtenir instantanément des informations cruciales sur nos stocks sans avoir à naviguer dans des rapports complexes. Un vrai gain de temps au quotidien.",
+        "author": "Sophie Lefebvre",
+        "position": "Responsable E-commerce, FashionStore"
+      }
+    ]
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "subtitle": "Tout ce que vous devez savoir sur StockSense",
+    "questions": [
+      {
+        "question": "Comment StockSense protège-t-il mes données sensibles ?",
+        "answer": "Nous utilisons un chiffrement de niveau bancaire pour protéger vos données. Toutes les informations sont chiffrées au repos et en transit. Nous effectuons des audits de sécurité réguliers et sommes conformes aux normes RGPD, SOC 2 et ISO 27001."
+      },
+      {
+        "question": "Puis-je intégrer StockSense à mon système actuel ?",
+        "answer": "Absolument ! StockSense s'intègre facilement avec la plupart des ERP, CRM et plateformes e-commerce. Nous proposons des connecteurs prêts à l'emploi pour les systèmes populaires et une API ouverte pour les intégrations personnalisées."
+      },
+      {
+        "question": "Combien de temps prend la mise en place de StockSense ?",
+        "answer": "La majorité de nos clients sont opérationnels en moins de 2 semaines. Notre équipe d'onboarding vous guide à chaque étape, de l'importation de vos données à la configuration de vos paramètres personnalisés et à la formation de vos équipes."
+      },
+      {
+        "question": "Est-ce que StockSense convient aux petites entreprises ?",
+        "answer": "StockSense est conçu pour s'adapter à tous les volumes d'activité. De nombreuses PME utilisent notre solution et bénéficient d'un excellent retour sur investissement grâce à l'optimisation de leurs stocks et à la réduction des erreurs manuelles."
+      },
+      {
+        "question": "Comment fonctionnent les prédictions basées sur l'IA ?",
+        "answer": "Nos algorithmes analysent vos historiques de ventes, les tendances saisonnières, les événements externes et d'autres facteurs pour prédire la demande future. Plus vous utilisez StockSense, plus les prédictions deviennent précises grâce à l'apprentissage continu."
+      },
+      {
+        "question": "Proposez-vous une assistance en cas de problème ?",
+        "answer": "Oui, nous offrons une assistance par email pour tous nos clients, et un support prioritaire avec accès à un gestionnaire de compte dédié pour les clients du plan Intelligence. Notre temps de réponse moyen est inférieur à 4 heures pendant les jours ouvrables."
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Tarifs simples et transparents",
+    "subtitle": "Choisissez le plan qui correspond à vos besoins, sans frais cachés",
+    "userMonth": "utilisateur / mois",
+    "billedAnnually": "Facturé annuellement",
+    "recommended": "Recommandé",
+    "contactUs": "Contactez-nous",
+    "standardPlan": {
+      "title": "Plan Standard",
+      "price": "29€",
+      "description": "Pour les équipes qui débutent",
+      "features": [
+        "Gestion complète des produits et SKUs",
+        "Suivi des entrées/sorties en temps réel",
+        "Alertes de stock bas et historique",
+        "Gestion multi-entrepôts",
+        "Codes-barres et QR codes",
+        "Intégrations ERP, CRM, e-commerce",
+        "Application mobile complète",
+        "Tableaux de bord simples",
+        "Export CSV, PDF, Excel",
+        "Support par email",
+        "Offert à 29€/utilisateur / an pour 10 de vos utilisateurs"
+      ],
+      "cta": "Essayer ce plan"
+    },
+    "intelligencePlan": {
+      "title": "Plan Intelligence",
+      "price": "49€",
+      "description": "Pour une optimisation avancée",
+      "features": [
+        "Gestion complète des produits et SKUs",
+        "Suivi des entrées/sorties en temps réel",
+        "Alertes de stock bas et historique",
+        "Gestion multi-entrepôts",
+        "Codes-barres et QR codes",
+        "Intégrations ERP, CRM, e-commerce",
+        "Application mobile complète",
+        "Analyse avancée des données (insights)",
+        "Prévision de la demande par IA",
+        "Suggestions de réapprovisionnement",
+        "Calcul automatique des marges",
+        "Segmentation clients (RFM)",
+        "Dashboard analytique interactif",
+        "Chatbot avec traitement du langage naturel",
+        "Automatisation personnalisable",
+        "Alertes intelligentes (Slack, Email)",
+        "Support prioritaire"
+      ],
+      "cta": "Essayer ce plan"
+    }
+  },
+  "footer": {
+    "readyText": "Prêt à révolutionner votre gestion de stock ?",
+    "joinText": "Rejoignez des milliers d'entreprises qui optimisent leurs opérations avec StockSense.",
+    "trialCta": "Essayer gratuitement",
+    "demoCta": "Demander une démo",
+    "description": "La plateforme de gestion de stock intelligente qui transforme votre chaîne d'approvisionnement.",
+    "product": "Produit",
+    "resources": "Ressources",
+    "resourceLinks": {
+      "helpCenter": "Centre d'aide",
+      "apiDocs": "Documentation API",
+      "blog": "Blog",
+      "webinars": "Webinars",
+      "caseStudies": "Études de cas"
+    },
+    "company": "Société",
+    "companyLinks": {
+      "about": "À propos",
+      "careers": "Carrières",
+      "contact": "Contact",
+      "legal": "Mentions légales",
+      "privacy": "Politique de confidentialité"
+    },
+    "copyright": "© {year} StockSense. Tous droits réservés."
+  },
+  "lang": {
+    "fr": "Français",
+    "en": "English"
+  }
 }

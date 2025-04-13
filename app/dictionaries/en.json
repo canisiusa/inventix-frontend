@@ -1,16 +1,344 @@
 {
- "apicodes": {
-  "1000": "Un utilisateur avec cet email existe déjà.",
-  "1001": "Identifiants incorrects.",
-  "1002": "Votre compte n'est pas vérifié. Veuillez vérifier votre boite mail",
-  "1003": "Email envoyé avec succès",
-  "1004": "Mot de passe mis à jour avec succès",
-  "1005": "Erreur lors de l'inscription du parent",
-  "1006": "Cet utilisateur n'existe pas",
-  "1007": "Token expiré",
-  "1008": "Token invalide",
-  "1009": "Connexion échouée",
-  "1010": "une erreur inattendue s'est produite"
+  "apicodes": {
+    "1000": "Un utilisateur avec cet email existe déjà.",
+    "1001": "Identifiants incorrects.",
+    "1002": "Votre compte n'est pas vérifié. Veuillez vérifier votre boite mail",
+    "1003": "Email envoyé avec succès",
+    "1004": "Mot de passe mis à jour avec succès",
+    "1005": "Erreur lors de l'inscription du parent",
+    "1006": "Cet utilisateur n'existe pas",
+    "1007": "Token expiré",
+    "1008": "Token invalide",
+    "1009": "Connexion échouée",
+    "1010": "une erreur inattendue s'est produite",
+    "1011": "Erreur de mise à jour de l'utilisateur",
+    "1012": "Session invalide ou expirée",
+    "1013": "Refresh token invalide ou session expirée",
+    "1014": "Nombre maximum de connexions atteint",
+    "1015": "Impossible de générer un accessToken",
+    "1016": "Erreur de récupération des produits",
+    "1017": "Erreur de création de produit",
+    "1018": "Erreur de mise à jour de produit",
+    "1019": "Erreur de suppression de produit",
+    "1020": "User not found in this company",
+    "1021": "Supplier already exists",
+    "1022": "Supplier not found",
+    "1023": "Error creating supplier",
+    "1024": "Error updating supplier",
+    "1025": "Error deleting supplier",
+    "1026": "Error restoring supplier",
+    "1027": "Error fetching suppliers",
+    "1028": "Error fetching supplier",
+    "1029": "'Company not found'"
   },
-  "register_successfull": "Votre compte a été crée avec succès. Veuillez consulter votre boite mail pour valider votre compte"
+  "register_successfull": "Votre compte a été crée avec succès. Veuillez consulter votre boite mail pour valider votre compte",
+  "active": "Active",
+  "inactive": "Inactive",
+  "add": "Ajouter",
+  "edit": "Modifier",
+  "delete": "Supprimer",
+  "restore": "Restaurer",
+  "view": "Voir",
+  "navbar": {
+    "features": "Features",
+    "automation": "Automation",
+    "mobile": "Mobile",
+    "analysis": "Analysis",
+    "pricing": "Pricing",
+    "login": "Login",
+    "freeTrial": "Free Trial"
+  },
+  "hero": {
+    "title": "Manage your inventory like a pro.",
+    "subtitle": "The complete inventory management platform that optimizes your stocks using artificial intelligence.",
+    "demoButton": "Request a Demo",
+    "trialButton": "Try for Free",
+    "security": "Guaranteed security",
+    "openAPI": "Open API",
+    "predictiveAnalysis": "Predictive analysis",
+    "optimizedStock": "Optimized stock",
+    "accuratePredictions": "Accurate predictions",
+    "efficiency": "+47% efficiency",
+    "errorReduction": "Error reduction"
+  },
+  "features": {
+    "title": "Key Inventory Management Features",
+    "subtitle": "Powerful tools designed to meet all your inventory management needs",
+    "productManagement": {
+      "title": "Product Management",
+      "description": "Easily manage your SKUs, variants, photos and attributes for perfect organization of your catalog."
+    },
+    "realTimeTracking": {
+      "title": "Real-time Tracking",
+      "description": "Monitor all inbound, outbound and stock movements with absolute precision and in real time."
+    },
+    "alertsHistory": {
+      "title": "Stock Alerts",
+      "description": "Receive automatic notifications for low stock levels and access the complete history of movements."
+    },
+    "multiWarehouse": {
+      "title": "Multi-warehouse",
+      "description": "Manage multiple warehouses and storage locations with a clear, centralized overview."
+    },
+    "barcodes": {
+      "title": "Barcodes & QR Codes",
+      "description": "Generate and print labels with barcodes or QR codes for fast, error-free inventory."
+    },
+    "stockMovements": {
+      "title": "Stock Movements",
+      "description": "Facilitate transfers between warehouses and track each movement with complete traceability."
+    }
+  },
+  "automation": {
+    "title": "Intelligent Automation",
+    "subtitle": "Reduce your manual tasks and integrate your favorite tools for smooth inventory management",
+    "autoOrders": {
+      "title": "Automatic Orders",
+      "subtitle": "Intelligent replenishment",
+      "description": "The system automatically triggers supplier orders when your stock reaches a critical threshold, customizable by product or category.",
+      "feature1": "Scheduled orders",
+      "feature2": "Intelligent suggestions",
+      "feature3": "Supplier tracking"
+    },
+    "integrations": {
+      "title": "Complete Integrations",
+      "subtitle": "Connect all your tools",
+      "description": "Integrate StockSense with your existing systems: ERP, CRM, e-commerce, accounting for a seamless ecosystem.",
+      "feature1": "Shopify, WooCommerce, Prestashop",
+      "feature2": "SAP, Sage, Microsoft Dynamics",
+      "feature3": "Salesforce, HubSpot, Zoho"
+    },
+    "api": {
+      "title": "Open API",
+      "subtitle": "Total customization",
+      "description": "Our documented RESTful API makes it easy to integrate StockSense with any third-party application or internal development.",
+      "feature1": "Customizable webhooks",
+      "feature2": "Complete documentation",
+      "feature3": "Developer support"
+    }
+  },
+  "mobile": {
+    "title": "Your inventory in your pocket",
+    "subtitle": "The StockSense mobile app allows you to keep control of your inventory wherever you are. View, scan and manage your stock on the go.",
+    "stockConsult": {
+      "title": "Mobile Consultation",
+      "description": "Access all your stock, orders and alerts from your smartphone or tablet, with a mobile-optimized interface."
+    },
+    "scanning": {
+      "title": "Intelligent Scanning",
+      "description": "Scan barcodes and QR codes directly from your smartphone to add, remove or check products in seconds."
+    },
+    "notifications": {
+      "title": "Real-time Notifications",
+      "description": "Receive instant alerts for important events: stock-outs, deliveries, detected anomalies."
+    },
+    "downloadIOS": "Download on iOS",
+    "downloadAndroid": "Download on Android",
+    "notif": {
+      "title": "Stock-out detected",
+      "description": "Action required"
+    }
+  },
+  "security": {
+    "title": "Enhanced Collaboration and Security",
+    "subtitle": "Work together securely with granular access controls and complete traceability",
+    "roleManagement": {
+      "title": "Role and Permission Management",
+      "description": "Define precisely who can view and modify which data. Create custom roles tailored to each function in your company."
+    },
+    "auditHistory": {
+      "title": "Complete History and Audit",
+      "description": "Track every action performed in the system with timestamps and user IDs for complete traceability and increased accountability."
+    },
+    "authentication": {
+      "title": "Enhanced Authentication",
+      "description": "Maximum protection with two-factor authentication (2FA), SSO, and compliance with the strictest security standards on the market."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboards and Custom Reports",
+    "subtitle": "Visualize all your key data and make informed decisions with our intuitive and customizable dashboards.",
+    "realTimeView": {
+      "title": "Real-time Overview",
+      "description": "View the status of your inventory, sales and orders on a centralized dashboard updated in real time."
+    },
+    "export": {
+      "title": "Multi-format Export",
+      "description": "Easily export your data and reports in CSV, PDF or Excel formats to share or integrate them into other tools."
+    },
+    "keyIndicators": {
+      "title": "Key Indicators",
+      "description": "Track your most important KPIs: best-selling products, inventory turnover, inventory value, stock-out forecasts."
+    },
+    "viewDashboards": "View dashboards",
+    "salesIncrease": "Sales +24%",
+    "thisMonth": "This month",
+    "optimalStock": "Optimal stock",
+    "productPercentage": "97% products"
+  },
+  "analysis": {
+    "title": "Intelligent Data Analysis",
+    "subtitle": "Harness the power of artificial intelligence to optimize your inventory management",
+    "advancedStats": {
+      "title": "Advanced Statistics",
+      "description": "Analyze your sales, returns, stock-outs and stock values in depth with interactive and customizable visualizations."
+    },
+    "prediction": {
+      "title": "Demand Prediction",
+      "description": "Anticipate sales peaks and avoid stock-outs with our machine learning algorithms that analyze your historical data."
+    },
+    "costAnalysis": {
+      "title": "Cost and Margin Analysis",
+      "description": "Automatically calculate your gross and net margins, compare your suppliers and identify cost anomalies."
+    },
+    "customerBehavior": {
+      "title": "Behavioral Analysis",
+      "description": "Segment your customers (RFM), assign scores and anticipate their future purchases for relevant recommendations."
+    },
+    "dashboard": {
+      "title": "Interactive Dashboard",
+      "description": "Customize your analysis experience with filters by date, product or warehouse for precise and actionable insights."
+    },
+    "chatbot": {
+      "title": "Integrated NLP Chatbot",
+      "description": "Ask questions in natural language like 'Which products are out of stock?' and get instant answers."
+    },
+    "automation": {
+      "title": "Automation & Intelligent Alerts",
+      "description": "Create your own automation rules and receive personalized alerts via Slack, email or push notifications. The system learns from your habits for increasingly relevant suggestions."
+    }
+  },
+  "testimonials": {
+    "title": "What our clients say",
+    "subtitle": "Companies of all sizes trust StockSense to optimize their inventory management",
+    "trustText": "They trust us",
+    "quotes": [
+      {
+        "quote": "Since we've been using StockSense, our stock-outs have decreased by 78% and our turnover has improved by 24%. Predictive analysis has allowed us to optimize our orders and reduce our storage costs.",
+        "author": "Marie Durand",
+        "position": "Supply Chain Director, RetailPro"
+      },
+      {
+        "quote": "The flexibility of StockSense has allowed us to adapt the system to our specific processes. Integration with our ERP was quick and the technical support is exceptional.",
+        "author": "Thomas Moreau",
+        "position": "CTO, LogiTech Solutions"
+      },
+      {
+        "quote": "The integrated chatbot is revolutionary. I can instantly get crucial information about our inventory without having to navigate through complex reports. A real time-saver on a daily basis.",
+        "author": "Sophie Lefebvre",
+        "position": "E-commerce Manager, FashionStore"
+      }
+    ]
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about StockSense",
+    "questions": [
+      {
+        "question": "How does StockSense protect my sensitive data?",
+        "answer": "We use bank-level encryption to protect your data. All information is encrypted at rest and in transit. We conduct regular security audits and comply with GDPR, SOC 2 and ISO 27001 standards."
+      },
+      {
+        "question": "Can I integrate StockSense with my current system?",
+        "answer": "Absolutely! StockSense integrates easily with most ERPs, CRMs and e-commerce platforms. We offer ready-to-use connectors for popular systems and an open API for custom integrations."
+      },
+      {
+        "question": "How long does it take to set up StockSense?",
+        "answer": "The majority of our clients are operational in less than 2 weeks. Our onboarding team guides you through every step, from importing your data to configuring your custom settings and training your teams."
+      },
+      {
+        "question": "Is StockSense suitable for small businesses?",
+        "answer": "StockSense is designed to adapt to all activity volumes. Many SMEs use our solution and benefit from an excellent return on investment through inventory optimization and reduction of manual errors."
+      },
+      {
+        "question": "How do AI-based predictions work?",
+        "answer": "Our algorithms analyze your sales history, seasonal trends, external events and other factors to predict future demand. The more you use StockSense, the more accurate the predictions become thanks to continuous learning."
+      },
+      {
+        "question": "Do you offer assistance in case of problems?",
+        "answer": "Yes, we offer email support for all our customers, and priority support with access to a dedicated account manager for Intelligence plan customers. Our average response time is less than 4 hours during business days."
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Simple and transparent pricing",
+    "subtitle": "Choose the plan that meets your needs, with no hidden fees",
+    "userMonth": "user / month",
+    "billedAnnually": "Billed annually",
+    "recommended": "Recommended",
+    "contactUs": "Contact us",
+    "standardPlan": {
+      "title": "Standard Plan",
+      "price": "€29",
+      "description": "For teams starting out",
+      "features": [
+        "Complete product and SKU management",
+        "Real-time tracking of inputs/outputs",
+        "Low stock alerts and history",
+        "Multi-warehouse management",
+        "Barcodes and QR codes",
+        "ERP, CRM, e-commerce integrations",
+        "Complete mobile application",
+        "Simple dashboards",
+        "CSV, PDF, Excel export",
+        "Email support",
+        "Offered at €29/user / year for 10 of your users"
+      ],
+      "cta": "Try this plan"
+    },
+    "intelligencePlan": {
+      "title": "Intelligence Plan",
+      "price": "€49",
+      "description": "For advanced optimization",
+      "features": [
+        "Complete product and SKU management",
+        "Real-time tracking of inputs/outputs",
+        "Low stock alerts and history",
+        "Multi-warehouse management",
+        "Barcodes and QR codes",
+        "ERP, CRM, e-commerce integrations",
+        "Complete mobile application",
+        "Advanced data analysis (insights)",
+        "AI demand forecasting",
+        "Replenishment suggestions",
+        "Automatic margin calculation",
+        "Customer segmentation (RFM)",
+        "Interactive analytical dashboard",
+        "Chatbot with natural language processing",
+        "Customizable automation",
+        "Intelligent alerts (Slack, Email)",
+        "Priority support"
+      ],
+      "cta": "Try this plan"
+    }
+  },
+  "footer": {
+    "readyText": "Ready to revolutionize your inventory management?",
+    "joinText": "Join thousands of companies optimizing their operations with StockSense.",
+    "trialCta": "Try for free",
+    "demoCta": "Request a demo",
+    "description": "The intelligent inventory management platform that transforms your supply chain.",
+    "product": "Product",
+    "resources": "Resources",
+    "resourceLinks": {
+      "helpCenter": "Help Center",
+      "apiDocs": "API Documentation",
+      "blog": "Blog",
+      "webinars": "Webinars",
+      "caseStudies": "Case Studies"
+    },
+    "company": "Company",
+    "companyLinks": {
+      "about": "About",
+      "careers": "Careers",
+      "contact": "Contact",
+      "legal": "Legal",
+      "privacy": "Privacy Policy"
+    },
+    "copyright": "© {year} StockSense. All rights reserved."
+  },
+  "lang": {
+    "fr": "Français",
+    "en": "English"
+  }
 }
