@@ -1,7 +1,5 @@
-'use server';
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import apiClient from "../config/apiClient";
+import apiClient from "./axiosInstance";
 
 const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
 

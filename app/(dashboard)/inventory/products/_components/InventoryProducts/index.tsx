@@ -24,7 +24,7 @@ import StockCard from './StockCard';
 import AppInput from '@/components/inputs/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Filter, LucideFolderSymlink, Search, Plus, FileDown } from 'lucide-react';
-import { getLowStockProducts, GetProducts, getProducts } from '@/lib/server-actions/products';
+import { getLowStockProducts, GetProducts, getProducts } from '@/lib/api/productsApi';
 import { toast } from '@/hooks/use-toast';
 import { handleError } from '@/lib/utils';
 import { useLocalization } from '@/providers/localization-provider';
@@ -202,6 +202,7 @@ const InventoryProducts = () => {
     }
   };
   useEffect(() => {
+    setProducts(initialProducts)
     fetchProducts();
   }, [query]);
 

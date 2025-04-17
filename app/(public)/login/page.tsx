@@ -13,8 +13,9 @@ import { handleError } from '@/lib/utils';
 import { useLocalization } from '@/providers/localization-provider';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { Logo } from '@/components/icons';
+import { setAuthTokens } from '@/lib/authTokens';
 
 const SignIn = () => {
 
@@ -44,7 +45,10 @@ const SignIn = () => {
         password: payload.password,
         redirect: false,
       });
-      if (result?.ok) {
+      const session = await getSession()
+      if (result?.ok && session) {
+        setAuthTokens(session.backendTokens)
+        return;
         router.push('/overview')
       } else {
         throw result?.error;

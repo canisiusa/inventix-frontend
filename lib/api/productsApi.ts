@@ -1,8 +1,5 @@
-'use server';
-
-import { PaginationAPIResponseData, Product } from "@/types/entities";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import apiClient from "../config/apiClient";
+import apiClient from "./axiosInstance";
 
 const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -95,6 +92,7 @@ export const getOverallInventory = async () => {
       status: "success",
     };
   } catch (error: any) {
+    throw error?.response?.data || error?.message;
     return {
       status: "failure",
       data: error?.response?.data || error?.message,

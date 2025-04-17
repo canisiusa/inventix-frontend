@@ -11,7 +11,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { NavProjects } from "./nav-projects"
+import { NavAdmin } from "./nav-admin"
 import { NavMain } from "./nav-main"
 import { Logo } from "../icons"
 
@@ -23,7 +23,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain />
-        <NavProjects />
+        <NavAdmin />
       </SidebarContent>
       <SidebarFooter className="flex items-end">
         <SidebarTrigger className=" text-white" />

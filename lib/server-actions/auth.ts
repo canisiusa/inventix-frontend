@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
-import apiClient from "../config/apiClient";
+import apiClient from "../api/axiosInstance";
 import { RegisterSchema } from "../schemas/auth.schemas";
 import { removeTokens } from "../cookieHelper";
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { getLowStockProducts } from '@/lib/server-actions/products';
+import { getLowStockProducts } from '@/lib/api/productsApi';
 import { handleError } from '@/lib/utils';
 import { useLocalization } from '@/providers/localization-provider';
 

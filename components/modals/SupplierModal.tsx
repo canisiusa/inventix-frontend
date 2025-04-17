@@ -1,5 +1,4 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Supplier } from "@/types/entities";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SupplierFormValues, supplierSchema } from "@/lib/schemas/supplier.schemas";
 import { useToast } from "@/hooks/use-toast";
 import { ContainerProps, create } from "react-modal-promise";
-import { createSupplier, updateSupplier } from "@/lib/server-actions/supplier.api";
+import { createSupplier, updateSupplier } from "@/lib/api/supplierApi";
 import { handleError } from "@/lib/utils";
 import { useLocalization } from "@/providers/localization-provider";
 
@@ -44,13 +43,6 @@ function SupplierModal(props: SupplierModalProps) {
 
   const handleSubmit = async (data: SupplierFormValues) => {
     try {
-      toast({
-        title: isEditing ? "Fournisseur mis à jour" : "Fournisseur ajouté",
-        description: isEditing
-          ? `${data.name} a été mis à jour avec succès`
-          : `${data.name} a été ajouté avec succès`,
-      });
-      return
       setIsSubmitting(true);
       if (isEditing) {
         await updateSupplier(props.supplier?.id || "", data);
@@ -93,7 +85,7 @@ function SupplierModal(props: SupplierModalProps) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nom*</FormLabel>
+                  <FormLabel>Nom et Prénoms*</FormLabel>
                   <FormControl>
                     <Input placeholder="Nom du fournisseur" {...field} />
                   </FormControl>

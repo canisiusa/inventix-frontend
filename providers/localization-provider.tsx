@@ -1,5 +1,5 @@
 'use client';
-import { DEFAULT_LANGUAGE } from '@/lib/config/localization.config';
+import { DEFAULT_LANGUAGE } from '@/constants/utils';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 type LocalizationContextType = {

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { getOverview } from '@/lib/server-actions/overview'
+import { getOverview } from '@/lib/api/overviewApi'
 import SalesOverview from './_components/SalesOverview'
 import PurchaseOverview from './_components/PurchaseOverview'
 import SalesAndPurcharseChart from './_components/SalesAndPurcharseChart'
@@ -12,7 +12,7 @@ import { handleError } from '@/lib/utils'
 import { useLocalization } from '@/providers/localization-provider'
 
 
-const Page = () => {
+const OverviewPage = () => {
   const [overviewData, setOverviewData] = useState<Overview | null>(null)
 
   const {t} = useLocalization()
@@ -52,4 +52,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default OverviewPage

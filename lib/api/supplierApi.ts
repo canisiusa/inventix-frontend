@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use server';
-
-import { PaginationAPIResponseData, Supplier } from "@/types/entities";
-import apiClient from "../config/apiClient";
+import apiClient from "./axiosInstance";
 import { SupplierFormValues } from "../schemas/supplier.schemas";
 
 const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -18,19 +15,13 @@ export interface GetSuppliers {
 
 export const getSuppliers = async (
   data?: GetSuppliers
-): Promise<{ data: PaginationAPIResponseData<Supplier> ; status: 'success' | 'failure' }> => {
+): Promise<PaginationAPIResponseData<Supplier>> => {
   try {
     const url = `${apiSuffix}/suppliers`;
     const response = await apiClient.get<PaginationAPIResponseData<Supplier>>(url, { params: data });
-    return {
-      data: response.data,
-      status: 'success',
-    };
+    return response.data;
   } catch (error: any) {
-    return {
-      status: 'failure',
-      data: error?.response?.data || error?.message,
-    };
+    throw error?.response?.data || error?.message;
   }
 };
 
@@ -55,9 +46,30 @@ export const getSupplierById = async (
 
 export const createSupplier = async (
   dto: SupplierFormValues
-): Promise<{ data: Supplier | any; status: 'success' | 'failure' }> => {
+): Promise<Supplier> => {
   try {
     const url = `${apiSuffix}/suppliers`;
+    const response = await apiClient.post<Supplier>(url, dto);
+
+    return response.data;
+  } catch (error: any) {
+    throw error?.response?.data || error?.message;
+  }
+};
+
+export const importSuppliers = async (
+  dto: { suppliers: SupplierFormValues[] }
+): Promise<{
+  data: {
+    created: number;
+    updated: number;
+    skipped: number;
+    logSkipped: string[];
+  } | never;
+  status: 'success' | 'failure'
+}> => {
+  try {
+    const url = `${apiSuffix}/suppliers/import`;
     const response = await apiClient.post(url, dto);
 
     return {
@@ -75,20 +87,14 @@ export const createSupplier = async (
 export const updateSupplier = async (
   id: string,
   dto: Partial<SupplierFormValues>
-): Promise<{ data: Supplier | any; status: 'success' | 'failure' }> => {
+): Promise<Supplier> => {
   try {
     const url = `${apiSuffix}/suppliers/${id}`;
-    const response = await apiClient.patch(url, dto);
+    const response = await apiClient.patch<Supplier>(url, dto);
 
-    return {
-      data: response.data,
-      status: 'success',
-    };
+    return response.data;
   } catch (error: any) {
-    return {
-      status: 'failure',
-      data: error?.response?.data || error?.message,
-    };
+    throw error?.response?.data || error?.message;
   }
 };
 

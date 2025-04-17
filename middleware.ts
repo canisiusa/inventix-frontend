@@ -1,8 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getIpLocationData } from './lib/utils';
-import { DEFAULT_LANGUAGE } from './lib/config/localization.config';
 import { cookies } from 'next/headers';
+import { DEFAULT_LANGUAGE } from './constants/utils';
 
 async function getLocale(): Promise<string | undefined> {
   const cookieStore = cookies();

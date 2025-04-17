@@ -42,7 +42,7 @@ const AppTable: React.FC<TableProps> = ({
               <col key={index} style={{ width: `${width}px` }} />
             ))}
           </colgroup>
-          <TableHeader className="bg-primary-100 hover:bg-primary-200 text-sm !text-primary-900 font-semibold ">
+          <TableHeader className="bg-primary-50 hover:bg-primary-200 text-sm !text-primary-900 font-semibold ">
             {header}
           </TableHeader>
         </table>

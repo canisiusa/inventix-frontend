@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-const Page = () => {
+const InventoryPage = () => {
   redirect('/inventory/products')
 }
-export default Page
+export default InventoryPage

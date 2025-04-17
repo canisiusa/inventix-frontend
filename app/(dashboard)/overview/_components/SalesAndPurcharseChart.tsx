@@ -11,7 +11,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { getOverviewChartData } from '@/lib/server-actions/overview'
+import { getOverviewChartData } from '@/lib/api/overviewApi'
 import { useLocalization } from '@/providers/localization-provider'
 import { handleError } from '@/lib/utils'
 
@@ -48,7 +48,6 @@ const SalesAndPurcharseChart = () => {
       } else {
         throw res.data
       }
-      console.log(res.data)
     } catch (error) {
       handleError({ error, message: "Error fetching sales data", dict: t })
     }

@@ -23,8 +23,8 @@ interface PaginationAPIResponseData<T> {
   data: T[];
   meta: {
     total: number;
-    page: number;
-    limit: number;
+    currentPage: number;
+    perPage: number;
     totalPages: number;
   };
 }
@@ -99,9 +99,12 @@ interface Product {
   id: string;
   name: string;
   color: string;
+  _count: {
+    products: number;
+  };
 }
 
-export interface Supplier {
+interface Supplier {
   id: string;
   name: string;
   email?: string;
@@ -111,8 +114,6 @@ export interface Supplier {
   createdAt: string; // ISO string (Date)
   updatedAt: string; // ISO string (Date)
   deletedAt?: string | null; // si soft deleted
-
-  // Relations optionnelles si tu les utilises côté frontend :
-  //products?: Product[]; 
-  //orders?: SupplierOrder[];
+  products?: Product[]; 
+  orders?: SupplierOrder[];
 }

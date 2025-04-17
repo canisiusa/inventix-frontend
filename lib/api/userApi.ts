@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
-import apiClient from "../config/apiClient";
+import apiClient from "./axiosInstance";
 import { UpdateUserSchema } from "../schemas/user.schemas";
 
 const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;

@@ -1,9 +1,9 @@
-"use server"
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use server"
 import { getServerSession } from "next-auth";
-import { authOptions } from "./nextauth";
+import { authOptions } from "../config/nextauth";
 import axios from "axios";
-import { getAccessToken, getRefreshToken,saveAccessToken } from "../cookieHelper";
+import { getAccessToken, getRefreshToken, saveAccessToken } from "../cookieHelper";
 import { cookies } from "next/headers";
 
 let isRefreshing = false;
@@ -76,16 +76,14 @@ apiClient.interceptors.response.use(
 
         const newAccessToken = response.data.accessToken;
 
-        console.log("Mettre à jour le accessToken dans next-auth");
-        // 🔹 Mettre à jour le accessToken dans next-auth
-        await saveAccessToken(newAccessToken);
+        // 🔹 Mettre à jour le accessToken dans les cookies
+         await saveAccessToken(newAccessToken);
 
         processQueue(null, newAccessToken);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
         return axios(originalRequest);
       } catch (err) {
-        console.log("Refresh token failed:", err);
         processQueue(err, null);
 
         (await cookies()).delete("next-auth.session-token"); // Supprime la session en cas d'échec

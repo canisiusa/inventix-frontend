@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { NavUser } from "@/components/app-sidebar/nav-user"
+import Initialize from "@/components/misc/initialize"
 import { PolicyModal } from "@/components/modals/PolicyModal"
 import {
   SidebarInset,
@@ -18,11 +19,11 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   if (!session) {
     redirect("/login")
   }
-
   return (
     <>
       <Prompt />
       <PolicyModal />
+      <Initialize />
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset className="bg-sidebar">

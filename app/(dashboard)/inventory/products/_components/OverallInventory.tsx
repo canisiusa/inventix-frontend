@@ -1,12 +1,36 @@
+"use client"
+import { useToast } from '@/hooks/use-toast';
+import { getOverallInventory } from '@/lib/api/productsApi';
+import { useEffect, useState } from 'react';
 
-import { getOverallInventory } from '@/lib/server-actions/products';
+export default function OverallInventory() {
+  const [data, setData] = useState({
+    categories: 0,
+    totalProducts: 0,
+    revenue: 0,
+    topSelling: 0,
+    topSellingCost: 0,
+    lowStocks: {
+      totalOrdered: 0,
+      notInStock: 0
+    }
+  });
+  const { toast } = useToast()
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await getOverallInventory();
+        setData(data);
+      } catch {
+        toast({
+          description: 'Failed to fetch overall inventory data',
+          variant: 'destructive'
+        })
+      }
+    };
+    fetchData();
+  }, [])
 
-export default async function OverallInventory() {
-  const { data, status } = await getOverallInventory();
-
-  if (status === 'failure') {
-    return <div className="text-red-500">Erreur de chargement des données</div>;
-  }
 
   return (
     <div className="justify-between items-center inline-flex w-full">
