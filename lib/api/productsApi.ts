@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { AddProductSchema } from "../schemas/inventory.schemas";
 import apiClient from "./axiosInstance";
 
 const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -19,7 +20,7 @@ export interface GetProducts {
 interface GetLowStockProducts extends GetProducts {
   threshold?: number;
 };
-export const getLowStockProducts = async (data?: GetLowStockProducts):Promise<{
+export const getLowStockProducts = async (data?: GetLowStockProducts): Promise<{
   data: PaginationAPIResponseData<Product>;
   status: 'success' | 'failure';
 }> => {
@@ -45,7 +46,7 @@ export const getLowStockProducts = async (data?: GetLowStockProducts):Promise<{
 };
 
 
-export const getProducts = async (data?:GetProducts ):Promise<{
+export const getProducts = async (data?: GetProducts): Promise<{
   data: PaginationAPIResponseData<Product>;
   status: 'success' | 'failure';
 }> => {
@@ -63,7 +64,6 @@ export const getProducts = async (data?:GetProducts ):Promise<{
       status: 'success',
     };
   } catch (error: any) {
-    console.log(error)
     return {
       status: 'failure',
       data: error?.response?.data || error?.message,
@@ -92,10 +92,46 @@ export const getOverallInventory = async () => {
       status: "success",
     };
   } catch (error: any) {
-    throw error?.response?.data || error?.message;
     return {
       status: "failure",
       data: error?.response?.data || error?.message,
     };
+  }
+};
+
+
+
+export const createProduct = async (
+  dto: AddProductSchema
+): Promise<Category> => {
+  try {
+    const url = `${apiSuffix}/product`;
+    const response = await apiClient.post<Category>(url, dto);
+    return response.data;
+  } catch (error: any) {
+    throw error?.response?.data || error?.message;
+  }
+};
+
+export const deleteProduct = async (id: string): Promise<Category> => {
+  try {
+    const url = `${apiSuffix}/product/${id}`;
+    const response = await apiClient.delete<Category>(url);
+    return response.data;
+  } catch (error: any) {
+    throw error?.response?.data || error?.message;
+  }
+};
+
+export const updateProduct = async (
+  id: string,
+  dto: Partial<AddProductSchema>
+): Promise<Category> => {
+  try {
+    const url = `${apiSuffix}/product/${id}`;
+    const response = await apiClient.put<Category>(url, dto);
+    return response.data;
+  } catch (error: any) {
+    throw error?.response?.data || error?.message;
   }
 };

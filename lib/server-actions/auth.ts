@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
-import apiClient from "../api/axiosInstance";
 import { RegisterSchema } from "../schemas/auth.schemas";
 import { removeTokens } from "../cookieHelper";
+import apiClient from "../api/axiosInstance(server)";
 
 const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
 

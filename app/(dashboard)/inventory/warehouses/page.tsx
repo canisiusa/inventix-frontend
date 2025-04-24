@@ -1,9 +1,8 @@
+import WarehousesPage from '@/features/inventory/warehouses/WarehousesPage'
 import React from 'react'
 
-const Page = () => {
+export default async function Page() {
   return (
-    <div>Page</div>
+    <WarehousesPage />
   )
 }
-
-export default Page

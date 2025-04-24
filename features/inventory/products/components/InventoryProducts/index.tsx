@@ -2,13 +2,6 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 import {
   AlertDialog,
@@ -28,146 +21,24 @@ import { getLowStockProducts, GetProducts, getProducts } from '@/lib/api/product
 import { toast } from '@/hooks/use-toast';
 import { handleError } from '@/lib/utils';
 import { useLocalization } from '@/providers/localization-provider';
-import { ProductFormProps, showProductForm } from '@/components/modals/ProductForm';
+import { ProductFormProps, showProductFormModal } from '@/components/modals/ProductForm';
 import { ProductFilterModalProps, showProductFilterModal } from '@/components/modals/ProductFilterModal';
+import { useCategoryStore } from '@/store/category.store';
+import { AddStockMovementModalProps, showAddStockMovementModal } from '@/components/modals/add-movement-modal';
+import { GenericCombobox } from '@/components/inputs/GenericCombobox';
+import { showAddCategoryModal } from '@/components/modals/CategoryModal';
 
-export const categories: Category[] = [
-  { id: 'c1', name: 'Viandes', color: '#EF4444' },
-  { id: 'c2', name: 'Poissons', color: '#3B82F6' },
-  { id: 'c3', name: 'Fruits', color: '#F59E0B' },
-  { id: 'c4', name: 'Légumes', color: '#22C55E' },
-  { id: 'c5', name: 'Produits laitiers', color: '#8B5CF6' },
-  { id: 'c6', name: 'Épicerie', color: '#EC4899' },
-  { id: 'c7', name: 'Boissons', color: '#06B6D4' },
-];
-export const initialProducts: Product[] = [
-  {
-    id: 'p1',
-    name: 'Filet de bœuf',
-    category: 'c1',
-    unit: 'kg',
-    currentStock: 15,
-    minimumStock: 5,
-    price: 28.50,
-    expiryDate: '2023-10-15',
-    supplierId: 's1',
-    stock: 15,
-  },
-  {
-    id: 'p2',
-    name: 'Saumon frais',
-    category: 'c2',
-    unit: 'kg',
-    currentStock: 7,
-    minimumStock: 3,
-    price: 22.75,
-    expiryDate: '2023-10-05',
-    supplierId: 's2',
-    stock: 7,
-  },
-  {
-    id: 'p3',
-    name: 'Tomates',
-    category: 'c4',
-    unit: 'kg',
-    currentStock: 25,
-    minimumStock: 10,
-    price: 3.99,
-    expiryDate: '2023-10-10',
-    supplierId: 's3',
-    stock: 25,
-  },
-  {
-    id: 'p4',
-    name: 'Laitue',
-    category: 'c4',
-    unit: 'pièce',
-    currentStock: 2,
-    minimumStock: 5,
-    price: 1.50,
-    expiryDate: '2023-10-04',
-    supplierId: 's3',
-    stock: 2,
-  },
-  {
-    id: 'p5',
-    name: 'Poulet fermier',
-    category: 'c1',
-    unit: 'kg',
-    currentStock: 12,
-    minimumStock: 4,
-    price: 12.99,
-    expiryDate: '2023-10-12',
-    supplierId: 's1',
-    stock: 12,
-  },
-  {
-    id: 'p6',
-    name: 'Cabillaud',
-    category: 'c2',
-    unit: 'kg',
-    currentStock: 4,
-    minimumStock: 2,
-    price: 18.50,
-    expiryDate: '2023-10-06',
-    supplierId: 's2',
-    stock: 4,
-  },
-  {
-    id: 'p7',
-    name: 'Pommes',
-    category: 'c3',
-    unit: 'kg',
-    currentStock: 30,
-    minimumStock: 15,
-    price: 2.79,
-    expiryDate: '2023-10-20',
-    supplierId: 's3',
-    stock: 30,
-  },
-  {
-    id: 'p8',
-    name: 'Carottes',
-    category: 'c4',
-    unit: 'kg',
-    currentStock: 20,
-    minimumStock: 8,
-    price: 1.99,
-    expiryDate: '2023-10-25',
-    supplierId: 's3',
-    stock: 20,
-  },
-  {
-    id: 'p9',
-    name: 'Huile d\'olive',
-    category: 'c6',
-    unit: 'litre',
-    currentStock: 8,
-    minimumStock: 3,
-    price: 9.95,
-    supplierId: 's4',
-    stock: 8,
-  },
-  {
-    id: 'p10',
-    name: 'Sel de mer',
-    category: 'c6',
-    unit: 'kg',
-    currentStock: 5,
-    minimumStock: 2,
-    price: 4.50,
-    supplierId: 's4',
-    stock: 5,
-  },
-];
+
 type ExtendedQuery<TExtra = object> = GetProducts & TExtra;
 
 const InventoryProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
+
+  const categories = useCategoryStore((state) => state.categories);
 
   const [query, setquery] = useState<ExtendedQuery<{
     threshold?: number;
@@ -202,7 +73,7 @@ const InventoryProducts = () => {
     }
   };
   useEffect(() => {
-    setProducts(initialProducts)
+    setProducts([])
     fetchProducts();
   }, [query]);
 
@@ -210,8 +81,8 @@ const InventoryProducts = () => {
   useEffect(() => {
     setquery((prev) => ({ ...prev, page: 1, limit: 100 }))
     // Filter by category
-    if (selectedCategory !== 'all') {
-      setquery((prev) => ({ ...prev, categoryId: selectedCategory }))
+    if (selectedCategory !== null) {
+      setquery((prev) => ({ ...prev, categoryId: selectedCategory.id }))
     } else {
       setquery((prev) => ({ ...prev, categoryId: undefined }))
     }
@@ -226,7 +97,7 @@ const InventoryProducts = () => {
 
   const handleEditProduct = async (productId: string) => {
     const product = products.find(p => p.id === productId);
-    await showProductForm({ product: product } as ProductFormProps)
+    await showProductFormModal({ product: product } as ProductFormProps)
   };
 
 
@@ -254,62 +125,72 @@ const InventoryProducts = () => {
     });
   };
 
-  const handleAddStock = (productId: string) => {
-    // In a real app, this would open a form to add stock
-    const updatedProducts = products.map(product => {
-      if (product.id === productId) {
-        return {
-          ...product,
-          currentStock: product.currentStock + 1
-        };
-      }
-      return product;
-    });
-
-    setProducts(updatedProducts);
-
-    toast({
-      title: "Stock mis à jour",
-      description: "1 unité ajoutée au stock."
-    });
-  };
-
-  const handleRemoveStock = (productId: string) => {
+  const handleAddStock = async (stock: Stock) => {
+    const updatedData: StockMovement = await showAddStockMovementModal({
+      isOpen: true,
+      stock: stock,
+      type: "IN"
+    } as AddStockMovementModalProps)
+    if (!updatedData) return;
     // Find the product
-    const product = products.find(p => p.id === productId);
-    if (!product || product.currentStock <= 0) return;
-
+    const product = products.find(p => p.id === stock.productId);
+    if (!product) return;
+    console.log("updatedData", updatedData.stock)
+    console.log("product", product)
     // Update the product
     const updatedProducts = products.map(p => {
-      if (p.id === productId) {
+      if (p.id === stock.productId) {
         return {
           ...p,
-          currentStock: p.currentStock - 1
+          stock: {
+            ...updatedData.stock,
+          }
         };
       }
       return p;
     });
-
+    // Update the state
     setProducts(updatedProducts);
+  };
 
-    toast({
-      title: "Stock mis à jour",
-      description: "1 unité retirée du stock."
+  const handleRemoveStock = async (stock: Stock) => {
+    const updatedData: StockMovement = await showAddStockMovementModal({
+      isOpen: true,
+      stock: stock,
+      type: "OUT"
+    } as AddStockMovementModalProps)
+    if (!updatedData) return;
+    // Find the product
+    const product = products.find(p => p.id === stock.productId);
+    if (!product) return;
+    // Update the product
+    const updatedProducts = products.map(p => {
+      if (p.id === stock.productId) {
+        return {
+          ...p,
+          stock: {
+            ...updatedData.stock,
+          }
+        };
+      }
+      return p;
     });
+    // Update the state
+    setProducts(updatedProducts);
   };
 
   const handleExportCSV = () => {
     // Convert products to CSV
     const headers = ['Nom', 'Catégorie', 'Unité', 'Stock actuel', 'Stock minimal', 'Prix', 'Date d\'expiration', 'Fournisseur'];
     const rows = products.map(product => {
-      const category = categories.find(c => c.id === product.category)?.name || '';
+      const category = categories.find(c => c.id === product.category.id)?.name || '';
 
       return [
         product.name,
         category,
         product.unit,
-        product.currentStock,
-        product.minimumStock,
+        product.stock?.quantity,
+        product.stock?.minimumStock,
         product.price.toFixed(2),
         product.expiryDate || '',
         product.supplierId
@@ -344,7 +225,7 @@ const InventoryProducts = () => {
               <span className="text-lg font-semibold">Produits</span>
               <div className="px-2 py-0.5 bg-sky-50 rounded-full border border-sky-200 justify-start items-center flex">
                 <span className="text-center text-blue-700 text-xs leading-none">
-                  {initialProducts.length}
+                  {products.length}
                 </span>
               </div>
             </div>
@@ -373,7 +254,8 @@ const InventoryProducts = () => {
                       threshold: value.threshold,
                       startDate: value.startDate,
                       endDate: value.endDate
-                    }})
+                    }
+                  })
 
                 });
               }}
@@ -405,7 +287,7 @@ const InventoryProducts = () => {
                   className='!gap-3'
                   onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                     e.stopPropagation();
-                    showProductForm({ product: undefined } as ProductFormProps)
+                    showProductFormModal({ product: undefined } as ProductFormProps)
                   }}
                 >
                   <Plus className="mr-2 h-4 w-4" />
@@ -415,7 +297,7 @@ const InventoryProducts = () => {
                   className='!gap-3'
                   onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                     e.stopPropagation();
-
+                    showAddCategoryModal()
                   }}
                 >
                   <LucideFolderSymlink
@@ -456,19 +338,15 @@ const InventoryProducts = () => {
             }
           />
 
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-56">
-              <SelectValue placeholder="Catégorie" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Toutes les catégories</SelectItem>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <GenericCombobox
+            value={selectedCategory}
+            onChange={setSelectedCategory}
+            options={categories}
+            labelKey="name"
+            valueKey="id"
+            placeholder='Toutes les catégories'
+            className='w-52'
+          />
         </div>
       </div>
 

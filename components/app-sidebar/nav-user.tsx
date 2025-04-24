@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation"
 import { logoutUser } from "@/lib/server-actions/auth"
 import { handleError } from "@/lib/utils"
 import { useLocalization } from "@/providers/localization-provider"
+import { deleteAuthTokens } from "@/lib/authTokens"
 
 export function NavUser() {
 
@@ -40,13 +41,14 @@ export function NavUser() {
     try {
       const resp = await logoutUser();
       if (resp.status === "success") {
+        deleteAuthTokens()
         signOut({ callbackUrl: "/" });
       } else if (resp.status === "failure") {
         throw resp.data;
       }
     } catch (error) {
+      console.error(error);
       handleError({ error, message: "Failed to log out", dict: t });
-
     }
   }
 

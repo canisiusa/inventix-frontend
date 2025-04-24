@@ -15,7 +15,7 @@ import AutomationSection from './(public)/_home-components/AutomationSection';
 const Home = async () => {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (session) {
     redirect("/overview")
   }
   return (

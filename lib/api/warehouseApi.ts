@@ -1,0 +1,107 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { AddStockMovementDto, WarehouseFormValues } from "../schemas/warehouse.schemas";
+import apiClient from "./axiosInstance";
+
+const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+export interface GetWarehouses {
+  page?: number;
+  limit?: number;
+  search?: string;
+  location?: string;
+}
+
+export const getWarehouses = async (params?: GetWarehouses):Promise<{
+  data: PaginationAPIResponseData<Warehouse> | never;
+  status: 'success' | 'failure';
+}> => {
+  try {
+    const url = `${apiSuffix}/warehouses`;
+    const response = await apiClient.get<PaginationAPIResponseData<Warehouse>>(url, { params });
+    return { data: response.data, status: 'success' };
+  } catch (error: any) {
+    return { status: 'failure', data: error?.response?.data || error?.message };
+  }
+};
+
+export const getWarehouse = async (id: string):Promise<{
+  data: Warehouse | never;
+  status: 'success' | 'failure';
+}> => {
+  try {
+    const url = `${apiSuffix}/warehouses/${id}`;
+    const response = await apiClient.get(url);
+    return { data: response.data, status: 'success' };
+  } catch (error: any) {
+    return { status: 'failure', data: error?.response?.data || error?.message };
+  }
+};
+
+export const createWarehouse = async (data: WarehouseFormValues):Promise<{
+  data: Warehouse | never;
+  status: 'success' | 'failure';
+}> => {
+  try {
+    const url = `${apiSuffix}/warehouses`;
+    const response = await apiClient.post(url, data);
+    return { data: response.data, status: 'success' };
+  } catch (error: any) {
+    return { status: 'failure', data: error?.response?.data || error?.message };
+  }
+};
+
+export const updateWarehouse = async (id: string, data: WarehouseFormValues):Promise<{
+  data: Warehouse | never;
+  status: 'success' | 'failure';
+}> => {
+  try {
+    const url = `${apiSuffix}/warehouses/${id}`;
+    const response = await apiClient.patch(url, data);
+    return { data: response.data, status: 'success' };
+  } catch (error: any) {
+    return { status: 'failure', data: error?.response?.data || error?.message };
+  }
+};
+
+export const deleteWarehouse = async (id: string):Promise<{
+  data: any;
+  status: 'success' | 'failure';
+}> => {
+  try {
+    const url = `${apiSuffix}/warehouses/${id}`;
+    const response = await apiClient.delete(url);
+    return { data: response.data, status: 'success' };
+  } catch (error: any) {
+    return { status: 'failure', data: error?.response?.data || error?.message };
+  }
+};
+
+export const getWarehouseStock = async (id: string) => {
+  try {
+    const url = `${apiSuffix}/warehouses/${id}/stock`;
+    const response = await apiClient.get(url);
+    return { data: response.data, status: 'success' };
+  } catch (error: any) {
+    return { status: 'failure', data: error?.response?.data || error?.message };
+  }
+};
+
+export const getWarehouseMovements = async (id: string) => {
+  try {
+    const url = `${apiSuffix}/warehouses/${id}/movements`;
+    const response = await apiClient.get(url);
+    return { data: response.data, status: 'success' };
+  } catch (error: any) {
+    return { status: 'failure', data: error?.response?.data || error?.message };
+  }
+};
+
+export const addStockMovement = async (data: AddStockMovementDto) => {
+  try {
+    const url = `${apiSuffix}/warehouses/stock-movements`;
+    const response = await apiClient.post(url, data);
+    return { data: response.data, status: 'success' };
+  } catch (error: any) {
+    return { status: 'failure', data: error?.response?.data || error?.message };
+  }
+};

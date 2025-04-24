@@ -32,7 +32,7 @@ export const sidebarItems: SidebarItem[] = [
       { title: "Categories", url: "/inventory/categories", permission: "view:categories" },
     ],
   },
-  {
+  /* {
     title: "Reporting",
     url: "/reporting",
     icon: <Image src="/reports.png" width={20} height={20} alt="" />,
@@ -41,7 +41,7 @@ export const sidebarItems: SidebarItem[] = [
       { title: "KPI", url: "/reporting/kpi", permission: "view:kpi" },
       { title: "Segmentation", url: "/reporting/segmentation", permission: "view:segmentation" },
     ],
-  },
+  }, */
   {
     title: "Suppliers",
     url: "/suppliers",
@@ -58,7 +58,7 @@ export const sidebarItems: SidebarItem[] = [
       { title: "Customers", url: "/orders/customers", permission: "view:order_customers" },
     ],
   },
-  {
+/*   {
     title: "Analytics",
     url: "/analytics",
     icon: <Image src="/analytics.png" width={20} height={20} alt="" />,
@@ -92,7 +92,7 @@ export const sidebarItems: SidebarItem[] = [
       { title: "E-commerce", url: "/integrations/ecommerce", permission: "view:integrations:ecommerce" },
       { title: "Accounting", url: "/integrations/accounting", permission: "view:integrations:accounting" },
     ],
-  },
+  }, */
 ]
 
 

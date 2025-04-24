@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { clsx, type ClassValue } from "clsx"
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -28,12 +28,25 @@ export const getIpLocationData = async () => {
 export const handleError = async ({ error, message, dict }: { error: unknown, message: string, dict: Record<string, any> }) => {
     if (typeof error === 'object' && error !== null && 'code' in error) {
     const apiError = error as ApiResponseError;
-    toast.error(dict.apicodes[apiError.code]);
-  } else if (error instanceof Error) {
-    toast.error(message);
-  } else {
-    toast.error("Une erreur s'est produite", {
-      description: "Veuillez réessayer plus tard.",
+    toast({
+      description: dict.apicodes[apiError.code],
+      variant: "destructive",
     });
+  //  toast.error(dict.apicodes[apiError.code]);
+  } else if (error instanceof Error) {
+    toast({
+      description: message,
+      variant: "destructive",
+    });
+    // toast.error(message);
+  } else {
+    toast({
+      title: "Une erreur s'est produite",
+      description: "Veuillez réessayer plus tard.",
+      variant: "destructive",
+    });
+   /*  toast.error("Une erreur s'est produite", {
+      description: "Veuillez réessayer plus tard.",
+    }); */
   }
 };

@@ -48,7 +48,6 @@ const SignIn = () => {
       const session = await getSession()
       if (result?.ok && session) {
         setAuthTokens(session.backendTokens)
-        return;
         router.push('/overview')
       } else {
         throw result?.error;

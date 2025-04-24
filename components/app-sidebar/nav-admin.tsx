@@ -30,10 +30,10 @@ export function NavAdmin() {
       url: "/admin",
       permission: "view:admin",
       items: [
-        { title: "Users", url: "/admin/users", permission: "manage:users", icon: <Image src="/admin.png" width={20} height={20} alt="" /> },
-        { title: "Roles & Permissions", url: "/admin/users", permission: "manage:access", icon: <Image src="/admin.png" width={20} height={20} alt="" /> },
-        { title: "Audit Log", url: "/admin/audit", permission: "view:audit", icon: <Image src="/admin.png" width={20} height={20} alt="" /> },
-        { title: "Billing", url: "/admin/billing", permission: "manage:billing", icon: <Image src="/admin.png" width={20} height={20} alt="" /> },],
+        { title: "Users", url: "/admin/users", permission: "manage:users", icon: <Image src="/users.png" width={20} height={20} alt="" /> },
+        { title: "Roles & Permissions", url: "/admin/users", permission: "manage:access", icon: <Image src="/authorization.png" width={20} height={20} alt="" /> },
+        { title: "Audit Log", url: "/admin/audit", permission: "view:audit", icon: <Image src="/logs.png" width={20} height={20} alt="" /> },
+        { title: "Billing", url: "/admin/billing", permission: "manage:billing", icon: <Image src="/billing.png" width={20} height={20} alt="" /> },],
     },
   ]
 

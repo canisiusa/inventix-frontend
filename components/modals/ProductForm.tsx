@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useForm } from 'react-hook-form';
@@ -20,154 +21,155 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AddProductSchema } from '@/lib/schemas/inventory.schemas';
 import { toast } from 'sonner';
 import { create, ContainerProps } from "react-modal-promise";
+import { useCategoryStore } from '@/store/category.store';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn, handleError } from '@/lib/utils';
+import { CalendarIcon } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { format } from "date-fns";
+import { createProduct, updateProduct } from '@/lib/api/productsApi';
+import { useLocalization } from '@/providers/localization-provider';
+import { getSuppliers } from '@/lib/api/supplierApi';
+import { ComboboxAsync } from '@/components/inputs/ComboboxAsync';
+import { getWarehouses } from '@/lib/api/warehouseApi';
+import { useEffect, useState } from 'react';
+import { GenericCombobox } from '@/components/inputs/GenericCombobox';
 
-const categories: Category[] = [
-  { id: 'c1', name: 'Viandes', color: '#EF4444' },
-  { id: 'c2', name: 'Poissons', color: '#3B82F6' },
-  { id: 'c3', name: 'Fruits', color: '#F59E0B' },
-  { id: 'c4', name: 'Légumes', color: '#22C55E' },
-  { id: 'c5', name: 'Produits laitiers', color: '#8B5CF6' },
-  { id: 'c6', name: 'Épicerie', color: '#EC4899' },
-  { id: 'c7', name: 'Boissons', color: '#06B6D4' },
-];
 
-const suppliers = [
-  {
-    id: 's1',
-    name: 'Boucherie Centrale',
-    contactPerson: 'Marc Durand',
-    email: 'contact@boucherie-centrale.fr',
-    phone: '01 23 45 67 89',
-    address: '15 Rue des Bouchers, 75001 Paris',
-    products: ['p1', 'p5'],
-    category: 'Viandes',
-    contactPhone: '01 23 45 67 89',
-    contactEmail: 'contact@boucherie-centrale.fr',
-    deliveryTime: '2-3',
-    lastOrderDate: '25/09/2023',
-  },
-  {
-    id: 's2',
-    name: 'Poissonnerie de la Mer',
-    contactPerson: 'Lucie Mer',
-    email: 'commandes@poissonnerie-mer.fr',
-    phone: '01 98 76 54 32',
-    address: '42 Avenue du Port, 13001 Marseille',
-    products: ['p2', 'p6'],
-    category: 'Poissons',
-    contactPhone: '01 98 76 54 32',
-    contactEmail: 'commandes@poissonnerie-mer.fr',
-    deliveryTime: '1-2',
-    lastOrderDate: '28/09/2023',
-  },
-  {
-    id: 's3',
-    name: 'Primeurs Bio',
-    contactPerson: 'Thomas Legrand',
-    email: 'contact@primeursbio.fr',
-    phone: '01 45 67 89 10',
-    address: '3 Rue du Marché, 69001 Lyon',
-    products: ['p3', 'p4', 'p7', 'p8'],
-    category: 'Fruits et Légumes',
-    contactPhone: '01 45 67 89 10',
-    contactEmail: 'contact@primeursbio.fr',
-    deliveryTime: '1',
-    lastOrderDate: '01/10/2023',
-  },
-  {
-    id: 's4',
-    name: 'Épicerie Fine',
-    contactPerson: 'Emma Petit',
-    email: 'commandes@epicerie-fine.fr',
-    phone: '01 56 78 90 12',
-    address: '27 Rue Gourmande, 75007 Paris',
-    products: ['p9', 'p10'],
-    category: 'Épicerie',
-    contactPhone: '01 56 78 90 12',
-    contactEmail: 'commandes@epicerie-fine.fr',
-    deliveryTime: '3-5',
-    lastOrderDate: '20/09/2023',
-  },
+const units = [
+  { value: 'bidon', label: 'Bidon' },
+  { value: 'boîte', label: 'Boîte' },
+  { value: 'bouteille', label: 'Bouteille' },
+  { value: 'carton', label: 'Carton' },
+  { value: 'centimètre', label: 'Centimètre (cm)' },
+  { value: 'colis', label: 'Colis' },
+  { value: 'g', label: 'Gramme (g)' },
+  { value: 'kg', label: 'Kilogramme (kg)' },
+  { value: 'l', label: 'Litre (l)' },
+  { value: 'mètre', label: 'Mètre (m)' },
+  { value: 'ml', label: 'Millilitre (ml)' },
+  { value: 'palette', label: 'Palette' },
+  { value: 'pallet', label: 'Pallet' },
+  { value: 'pallets', label: 'Pallets' },
+  { value: 'pallettes', label: 'Pallettes' },
+  { value: 'pièce', label: 'Pièce' },
+  { value: 'sachet', label: 'Sachet' },
+  { value: 'unité', label: 'Unité' },
 ];
 
 
 export interface ProductFormProps extends ContainerProps {
-  onResolve: (data: any) => void;
-  onReject: () => void;
+  onResolve?: (data: any) => void;
+  onReject?: () => void;
   product?: Product;
+  warehouse?: Warehouse;
 }
 
-const ProductForm:React.FC<ProductFormProps> = (props: ProductFormProps) => {
+const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
+  const categories = useCategoryStore((state) => state.categories);
+  const [loading, setloading] = useState(false)
+  const { t } = useLocalization();
+  const [selectedWarehouse, setselectedWarehouse] = useState(props.warehouse || null);
+
   const form = useForm<AddProductSchema>({
     resolver: zodResolver(AddProductSchema),
     defaultValues: props.product ? {
       name: props.product.name,
-      category: props.product.category,
+      categoryId: props.product.categoryId,
+      warehouseId: props.product.stock?.warehouseId,
       unit: props.product.unit,
-      currentStock: props.product.currentStock,
-      minimumStock: props.product.minimumStock,
+      currentStock: props.product.stock?.quantity || 0,
+      minimumStock: props.product.stock?.minimumStock || 0,
       price: props.product.price,
       expiryDate: props.product.expiryDate,
       supplierId: props.product.supplierId,
-      notes: '',
+      description: '',
+      sku: props.product.sku,
     } : {
       name: '',
-      category: '',
+      categoryId: '',
       unit: 'kg',
       currentStock: 0,
       minimumStock: 0,
       price: 0,
-      expiryDate: '',
       supplierId: '',
-      notes: '',
+      description: '',
+      warehouseId: props.warehouse?.id,
+      sku: generateSKU("", props.warehouse?.name),
     },
   });
 
-  const units = [
-    { value: 'kg', label: 'Kilogramme (kg)' },
-    { value: 'g', label: 'Gramme (g)' },
-    { value: 'l', label: 'Litre (l)' },
-    { value: 'ml', label: 'Millilitre (ml)' },
-    { value: 'pièce', label: 'Pièce' },
-    { value: 'carton', label: 'Carton' },
-    { value: 'bouteille', label: 'Bouteille' },
-    { value: 'unité', label: 'Unité' },
-  ];
 
-  // 'mètre', 'centimètre', 'boîte', 'sachet', 'bidon', 'palette', 'colis', 'pallette', 'pallet', 'pallets', 'pallettes,
-
-  const handleAddProduct = (data: AddProductSchema) => {
-    // In a real app, this would be an API call
-    const newProduct: AddProductSchema = {
-      name: data.name,
-      category: data.category,
-      unit: data.unit,
-      currentStock: data.currentStock,
-      minimumStock: data.minimumStock,
-      price: data.price,
-      expiryDate: data.expiryDate || undefined,
-      supplierId: data.supplierId,
-      sku: data.sku,
-      notes: data.notes,
-      warehouseId: data.warehouseId,
-    };
-
-    props.onResolve(data)
-
-    toast.success("Produit ajouté", {
-      description: `${newProduct.name} a été ajouté à l'inventaire.`
+  useEffect(() => {
+    const subscription = form.watch((values, { name: changedField }) => {
+      if (changedField === 'name') {
+        const newSku = generateSKU(values.name ?? "", selectedWarehouse?.name ?? "");
+        form.setValue('sku', newSku, { shouldDirty: true });
+      }
     });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  function generateSKU(name: string, warehouseId?: string): string {
+    if (props.product) return props.product.sku;
+    const getPart = (str: string | undefined, len: number, fallback = 'X') =>
+      (str ?? '').toUpperCase().substring(0, len).padEnd(len, fallback);
+
+    const randomPart = Math.random().toString(36).substring(2, 5).toUpperCase(); // 3 lettres/chiffres
+
+    const productPart = getPart(name, 3);
+    const warehousePart = getPart(warehouseId, 2);
+
+    return `${productPart}-${warehousePart}-${randomPart}`;
+  }
+
+
+  const handleAddProduct = async (data: AddProductSchema) => {
+    try {
+      setloading(true);
+      const newProduct: AddProductSchema = {
+        name: data.name,
+        categoryId: data.categoryId,
+        unit: data.unit,
+        currentStock: data.currentStock,
+        minimumStock: data.minimumStock,
+        price: data.price,
+        expiryDate: data.expiryDate || undefined,
+        supplierId: data.supplierId,
+        sku: data.sku,
+        description: data.description,
+        warehouseId: data.warehouseId,
+      };
+      const resp = await createProduct(newProduct);
+
+      props.onResolve?.(resp)
+
+      toast.success("Produit ajouté", {
+        description: `${newProduct.name} a été ajouté à l'inventaire.`
+      });
+    } catch (error) {
+      handleError({ error, message: "Erreur lors de l'ajout du produit.", dict: t });
+    } finally {
+      setloading(false);
+    }
   };
 
-  const handleUpdateProduct = (data: AddProductSchema) => {
-    props.onResolve(data)
-    toast.success("Produit mis à jour", {
-      description: `${data.name} a été mis à jour.`
-    });
+  const handleUpdateProduct = async (data: AddProductSchema) => {
+    try {
+      const resp = await updateProduct(props.product!.id, data);
+      props.onResolve?.(resp)
+      toast.success("Produit mis à jour", {
+        description: `${data.name} a été mis à jour.`
+      });
+    } catch (error) {
+      handleError({ error, message: "Erreur lors de la mise à jour du produit.", dict: t });
+    } finally {
+      setloading(false);
+    }
   };
 
   return (
@@ -210,60 +212,23 @@ const ProductForm:React.FC<ProductFormProps> = (props: ProductFormProps) => {
                 )}
               />
 
-              <FormField
+              <GenericCombobox
                 control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Catégorie</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Sélectionner une catégorie" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                name="categoryId"
+                options={categories}
+                labelKey="name"
+                valueKey="id"
+                label="Catégorie"
               />
 
-              <FormField
+              <GenericCombobox
                 control={form.control}
                 name="unit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Unité</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Sélectionner une unité" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {units.map((unit) => (
-                          <SelectItem key={unit.value} value={unit.value}>
-                            {unit.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                options={units}
+                labelKey="label"
+                valueKey="value"
+                placeholder='Sélectionner une unité'
+                label="Unité"
               />
 
               <FormField
@@ -310,12 +275,12 @@ const ProductForm:React.FC<ProductFormProps> = (props: ProductFormProps) => {
 
               <FormField
                 control={form.control}
-                name="expiryDate"
+                name="sku"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date d&apos;expiration (optionnel)</FormLabel>
+                    <FormLabel>Identifiant unique</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input type="text" {...field} disabled={props.product ? true : false} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -324,36 +289,74 @@ const ProductForm:React.FC<ProductFormProps> = (props: ProductFormProps) => {
 
               <FormField
                 control={form.control}
-                name="supplierId"
+                name="expiryDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fournisseur</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Sélectionner un fournisseur" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {suppliers.map((supplier) => (
-                          <SelectItem key={supplier.id} value={supplier.id}>
-                            {supplier.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Date d'expiration (optionnel)</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? format(field.value, "dd/MM/yyyy") : "Sélectionner une date"}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={(date) => field.onChange(date)}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+
+              <ComboboxAsync
+                name="supplierId"
+                control={form.control}
+                label="Fournisseur"
+                placeholder="Sélectionner un fournisseur"
+                fetcher={({ search, page, limit }) =>
+                  getSuppliers({ search, page, limit }).then((res) => res.data)
+                }
+                initialValue={props.product?.supplier ?? undefined}
+                getId={(supplier) => supplier.id}
+                getLabel={(supplier) => supplier?.name}
+              />
+
+              <ComboboxAsync
+                name="warehouseId"
+                control={form.control}
+                label="Entrepôt"
+                placeholder="Sélectionner un entrepôt"
+                onChange={(value) => {
+                  setselectedWarehouse(value ?? null);
+                  const newSku = generateSKU(form.getValues().name ?? "", value?.name ?? "");
+                  form.setValue('sku', newSku, { shouldDirty: true });
+                }}
+                fetcher={({ search, page, limit }) =>
+                  getWarehouses({ search, page, limit }).then((res) => res.data.data)
+                }
+                initialValue={props.product?.stock?.warehouse ?? props.warehouse ?? undefined}
+                getId={(supplier) => supplier.id}
+                getLabel={(supplier) => supplier?.name}
               />
             </div>
 
             <FormField
               control={form.control}
-              name="notes"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Notes (optionnel)</FormLabel>
@@ -373,7 +376,7 @@ const ProductForm:React.FC<ProductFormProps> = (props: ProductFormProps) => {
               <Button variant="outline" onClick={props.onReject} type="button">
                 Annuler
               </Button>
-              <Button type="submit">
+              <Button type="submit" loading={loading}>
                 {props.product ? 'Mettre à jour' : 'Ajouter'}
               </Button>
             </div>
@@ -386,4 +389,4 @@ const ProductForm:React.FC<ProductFormProps> = (props: ProductFormProps) => {
 };
 export default ProductForm;
 
-export const showProductForm = create(ProductForm);
+export const showProductFormModal = create(ProductForm);
