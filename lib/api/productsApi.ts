@@ -10,6 +10,7 @@ export interface GetProducts {
   search?: string;
   categoryId?: string;
   supplierId?: string;
+  warehouseId?: string;
   minPrice?: number;
   maxPrice?: number;
   sortBy?: string;
@@ -20,10 +21,7 @@ export interface GetProducts {
 interface GetLowStockProducts extends GetProducts {
   threshold?: number;
 };
-export const getLowStockProducts = async (data?: GetLowStockProducts): Promise<{
-  data: PaginationAPIResponseData<Product>;
-  status: 'success' | 'failure';
-}> => {
+export const getLowStockProducts = async (data?: GetLowStockProducts): Promise<PaginationAPIResponseData<Product>> => {
   try {
     const url = `${apiSuffix}/product/low-stock`;
 
@@ -33,23 +31,14 @@ export const getLowStockProducts = async (data?: GetLowStockProducts): Promise<{
       },
     });
 
-    return {
-      data: response.data,
-      status: 'success',
-    };
+    return response.data;
   } catch (error: any) {
-    return {
-      status: 'failure',
-      data: error?.response?.data || error?.message,
-    };
+    return error?.response?.data || error?.message;
   }
 };
 
 
-export const getProducts = async (data?: GetProducts): Promise<{
-  data: PaginationAPIResponseData<Product>;
-  status: 'success' | 'failure';
-}> => {
+export const getProducts = async (data?: GetProducts): Promise<PaginationAPIResponseData<Product>> => {
   try {
     const url = `${apiSuffix}/product`;
 
@@ -58,16 +47,30 @@ export const getProducts = async (data?: GetProducts): Promise<{
         ...data,
       },
     });
-
-    return {
-      data: response.data,
-      status: 'success',
-    };
+    return response.data;
   } catch (error: any) {
-    return {
-      status: 'failure',
-      data: error?.response?.data || error?.message,
-    };
+    return error?.response?.data || error?.message;
+  }
+};
+
+interface GetTopSellingProducts extends GetProducts {
+  startDate?: Date;
+  endDate?: Date;
+  minSales?: number;
+};
+export const getTopSellingProducts = async (data?: GetTopSellingProducts): Promise<PaginationAPIResponseData<Product>> => {
+  try {
+    const url = `${apiSuffix}/product/top-selling`;
+
+    const response = await apiClient.get<PaginationAPIResponseData<Product>>(url, {
+      params: {
+        ...data,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    return error?.response?.data || error?.message;
   }
 };
 
@@ -113,10 +116,10 @@ export const createProduct = async (
   }
 };
 
-export const deleteProduct = async (id: string): Promise<Category> => {
+export const deleteProduct = async (id: string) => {
   try {
     const url = `${apiSuffix}/product/${id}`;
-    const response = await apiClient.delete<Category>(url);
+    const response = await apiClient.delete(url);
     return response.data;
   } catch (error: any) {
     throw error?.response?.data || error?.message;

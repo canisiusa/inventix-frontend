@@ -64,8 +64,7 @@ export const confirmEmail = async (data: { token: string, email: string }) => {
       data: "Email confirmé avec succès",
       status: "success",
     };
-  } catch (error) {
-    console.log(error);
+  } catch {
     return {
       status: "failure",
       data: "Une erreur est survenue lors de la confirmation",
@@ -97,8 +96,7 @@ export const resendConfirmationEmail = async (email: string) => {
       data: "Email de confirmation envoyé",
       status: "success",
     };
-  } catch (error) {
-    console.log(error);
+  } catch {
     return {
       status: "failure",
       data: "Une erreur est survenue lors de l'envoi",

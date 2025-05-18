@@ -59,7 +59,6 @@ const WarehousesPage = () => {
 
 
   const handleFilterChange = (filters: QueryWarehousesDto) => {
-    console.log("Filters applied:", filters);
     // Dans une vraie application, cela déclencherait un appel API avec les filtres
     // Simulons une recherche simple ici
     if (filters.search) {

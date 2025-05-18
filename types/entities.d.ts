@@ -3,7 +3,7 @@ type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 interface ApiResponseError {
-  code: string;
+  code: Apicodes;
   message: string;
 }
 
@@ -51,41 +51,141 @@ interface IpInfo {
   location: IpLocation;
 }
 
+interface ActivityLog {
+  id: string;
+  orderId: string;
+  companyUserId: string;
+  supplierOrderId: string | null;
+  companyUser: {
+    id: string;
+    name: string;
+  };
+  action: string;
+  createdAt: string;
+}
+
+interface CompanyUser {
+  id: string;
+  name: string;
+  userId: string;
+  companyId: string;
+  roleId: string;
+  createdAt: string;
+  updatedAt: string;
+  user: User;
+  company: Company;
+  role: Role;
+}
+
+
+interface Company {
+  id: string;
+  name: string;
+  description: string | null;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  logo: string | null;
+  country: string | null;
+  currency: string;
+  timezone: string | null;
+  siret: string | null;
+  tva: number | null;
+  city: string | null;
+  postalCode: string | null;
+  language: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Role {
+  id: string;
+  name: string;
+  companyId: string;
+  isOwner: boolean;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+  permissions: Permission[];
+}
+
+
+interface Permission {
+  roleId: string;
+  permissionId: string;
+  value: boolean;
+  permission: {
+    id: string;
+    name: PermissionName;
+  };
+}
+
+type PermissionName =
+  | "view:overview"
+  | "view:inventory"
+  | "manage:order_suppliers"
+  | "manage:orders"
+  | "view:suppliers"
+  | "view:products"
+  | "manage:categories"
+  | "manage:products"
+  | "manage:analytics"
+  | "manage:suppliers"
+  | "view:orders"
+  | "manage:overview"
+  | "manage:warehouses"
+  | "manage:inventory"
+  | "view:order_suppliers"
+  | "manage:analytics:sales"
+  | "view:analytics:costs"
+  | "view:order_customers"
+  | "view:warehouses"
+  | "manage:order_customers"
+  | "view:automations"
+  | "manage:automations"
+  | "view:analytics"
+  | "view:automations:reorder"
+  | "manage:analytics:costs"
+  | "manage:automations:workflows"
+  | "manage:automations:reorder"
+  | "manage:automations:reports"
+  | "manage:automations:alerts"
+  | "view:categories"
+  | "view:automations:alerts"
+  | "view:automations:reports"
+  | "view:integrations"
+  | "view:automations:workflows"
+  | "view:integrations:ecommerce"
+  | "view:integrations:accounting"
+  | "manage:integrations"
+  | "view:analytics:stock"
+  | "manage:analytics:stock"
+  | "manage:integrations:accounting"
+  | "view:integrations:erp"
+  | "manage:integrations:erp"
+  | "view:analytics:customers"
+  | "manage:analytics:customers"
+  | "view:analytics:sales"
+  | "manage:integrations:ecommerce"
+  | "view:admin"
+  | "view:users"
+  | "manage:users"
+  | "manage:roles"
+  | "view:audit"
+  | "manage:billing"
+  | "manage:settings";
+
 
 interface User {
   id: string;
-  name: string;
   email: string;
   emailVerified: boolean;
   acceptTerms: boolean;
   createdAt: Date;
   updatedAt: Date;
-  companiesUser: {
-    id: string;
-    userId: string;
-    companyId: string;
-    roleId: string;
-    createdAt: Date;
-    updatedAt: Date;
-    company: {
-      id: string;
-      name: string;
-      description: null;
-      createdAt: Date;
-      updatedAt: Date;
-    };
-    role: {
-      id: string;
-      name: string;
-      permissions: string[];
-      companyId: string;
-      isOwner: boolean;
-      isDefault: boolean;
-      createdAt: Date;
-      updatedAt: Date;
-    };
-  }[];
 }
+
 
 interface Overview {
   salesOverview: SalesOverview;
@@ -118,15 +218,6 @@ interface SalesOverview {
   cost: number;
 }
 
-
-interface Company {
-  id: string;
-  name: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 interface Product {
   id: string;
   companyId: string;
@@ -148,7 +239,12 @@ interface Product {
   stockMovements: StockMovement[];
 }
 
-
+type OrderStatus =
+  'PENDING' |
+  'CONFIRMED' |
+  'CANCELLED' |
+  'DELIVERED' |
+  'RETURNED';
 
 interface Category {
   id: string;
@@ -192,10 +288,10 @@ interface StockMovement {
   id: string;
   type: MovementType;
   quantity: number;
-  userId: string;
+  companyUserId: string;
   stockId: string;
   stock: Stock;
-  user: User;
+  companyUser: CompanyUser;
   createdAt: Date;
   notes: string | null;
 }
@@ -214,4 +310,40 @@ interface Stock {
   warehouseId: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+type OrderStatus =
+  "PENDING" |
+  "CONFIRMED" |
+  "CANCELLED" |
+  "DELIVERED" |
+  "RETURNED";
+
+
+interface SupplierOrder {
+  id: string;
+  companyId: string;
+  supplierId: string;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+  pdfUrl: string | null;
+  orderNumber: string;
+  products: SupplierOrderProduct[];
+  supplier: Supplier;
+  activities: ActivityLog[];
+}
+
+interface SupplierOrderProduct {
+  id: string;
+  orderId: string;
+  productId: string;
+  unitPrice: number | null;
+  product: {
+    id: string;
+    name: string;
+    sku: string;
+    price: number;
+  }
+  quantity: number;
 }

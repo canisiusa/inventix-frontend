@@ -71,7 +71,7 @@ function SupplierModal(props: SupplierModalProps) {
   };
 
   return (
-    <Dialog open={props.isOpen} onOpenChange={() => { props.onReject?.("cancel") }}>
+    <Dialog open={props.isOpen}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>

@@ -3,21 +3,11 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import StockCard from './StockCard';
 import AppInput from '@/components/inputs/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Filter, LucideFolderSymlink, Search, Plus, FileDown } from 'lucide-react';
-import { getLowStockProducts, GetProducts, getProducts } from '@/lib/api/productsApi';
+import { deleteProduct, getLowStockProducts, GetProducts, getProducts, getTopSellingProducts } from '@/lib/api/productsApi';
 import { toast } from '@/hooks/use-toast';
 import { handleError } from '@/lib/utils';
 import { useLocalization } from '@/providers/localization-provider';
@@ -27,6 +17,8 @@ import { useCategoryStore } from '@/store/category.store';
 import { AddStockMovementModalProps, showAddStockMovementModal } from '@/components/modals/add-movement-modal';
 import { GenericCombobox } from '@/components/inputs/GenericCombobox';
 import { showAddCategoryModal } from '@/components/modals/CategoryModal';
+import { ConfirmActionModalProps, showConfirmModal } from '@/components/modals/ActionConfirm';
+import { useDebounce } from '@/hooks/use-debounce';
 
 
 type ExtendedQuery<TExtra = object> = GetProducts & TExtra;
@@ -35,15 +27,15 @@ const InventoryProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
-  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const debouncedSearch = useDebounce(searchQuery, 500);
 
   const categories = useCategoryStore((state) => state.categories);
 
   const [query, setquery] = useState<ExtendedQuery<{
     threshold?: number;
-    startDate?: Date
-    endDate?: Date
+    startDate?: Date;
+    endDate?: Date;
+    minSales?: number;
   }>>({
     page: 1,
     limit: 100,
@@ -59,15 +51,12 @@ const InventoryProducts = () => {
       if (activeIndex === "all") {
         response = await getProducts(query)
       } else if (activeIndex === "topSelling") {
-        //
+        response = await getTopSellingProducts(query)
       } else if (activeIndex === "outOfStock") {
         response = await getLowStockProducts(query)
       }
-      if (response.status === 'success') {
-        setProducts(response.data.data);
-      } else {
-        throw response.data.data
-      }
+      setProducts(response.data);
+
     } catch (error) {
       handleError({ error, message: "Une erreur s'est produite lors du chargement des produits.", dict: t })
     }
@@ -77,23 +66,25 @@ const InventoryProducts = () => {
     fetchProducts();
   }, [query]);
 
-  // Apply filters when category or search query changes
   useEffect(() => {
-    setquery((prev) => ({ ...prev, page: 1, limit: 100 }))
-    // Filter by category
-    if (selectedCategory !== null) {
-      setquery((prev) => ({ ...prev, categoryId: selectedCategory.id }))
-    } else {
-      setquery((prev) => ({ ...prev, categoryId: undefined }))
-    }
+    setquery(prev => {
+      // On reconstruit tout l'objet d'un coup
+      const next: typeof prev = {
+        ...prev,
+        page: 1,
+        limit: 100,
+        categoryId: selectedCategory?.id,
+      };
 
-    // Filter by search query
-    if (searchQuery) {
-      setquery((prev) => ({ ...prev, search: searchQuery }))
-    }
+      // Si on avait déjà un search, ou si on a un nouveau debouncedSearch,
+      // on l'ajoute (même vide pour effacer l'ancien)
+      if (debouncedSearch.trim() || (prev.search && !debouncedSearch.trim())) {
+        next.search = debouncedSearch;
+      }
 
-  }, [selectedCategory, searchQuery, activeIndex]);
-
+      return next;
+    });
+  }, [selectedCategory, debouncedSearch, activeIndex]);
 
   const handleEditProduct = async (productId: string) => {
     const product = products.find(p => p.id === productId);
@@ -101,28 +92,29 @@ const InventoryProducts = () => {
   };
 
 
-  const confirmDelete = (productId: string) => {
-    setProductToDelete(productId);
-    setShowDeleteDialog(true);
-  };
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      await showConfirmModal({
+        isOpen: true,
+        message: "Cette action est irréversible. Le produit sera définitivement supprimé de l'inventaire.",
+        title: "Êtes-vous sûr?",
+        okText: "Supprimer",
+        cancelText: "Annuler",
+      } as ConfirmActionModalProps)
+      await deleteProduct(productId);
+      const productName = products.find(p => p.id === productId)?.name || '';
 
-  const handleDeleteProduct = () => {
-    if (!productToDelete) return;
+      // Filter out the product to delete
+      const updatedProducts = products.filter(product => product.id !== productId);
+      setProducts(updatedProducts);
 
-    const productName = products.find(p => p.id === productToDelete)?.name || '';
-
-    // Filter out the product to delete
-    const updatedProducts = products.filter(product => product.id !== productToDelete);
-    setProducts(updatedProducts);
-
-    // Reset state
-    setShowDeleteDialog(false);
-    setProductToDelete(null);
-
-    toast({
-      title: "Produit supprimé",
-      description: `${productName} a été supprimé de l'inventaire.`
-    });
+      toast({
+        title: "Produit supprimé",
+        description: `${productName} a été supprimé de l'inventaire.`
+      });
+    } catch (error) {
+      handleError({ error, message: "Une erreur s'est produite lors de la suppression du produit.", dict: t })
+    }
   };
 
   const handleAddStock = async (stock: Stock) => {
@@ -135,8 +127,6 @@ const InventoryProducts = () => {
     // Find the product
     const product = products.find(p => p.id === stock.productId);
     if (!product) return;
-    console.log("updatedData", updatedData.stock)
-    console.log("product", product)
     // Update the product
     const updatedProducts = products.map(p => {
       if (p.id === stock.productId) {
@@ -251,9 +241,9 @@ const InventoryProducts = () => {
                   setquery((old) => {
                     return {
                       ...old,
-                      threshold: value.threshold,
-                      startDate: value.startDate,
-                      endDate: value.endDate
+                      minSales: value?.minSales,
+                      startDate: value?.dateRange?.startDate,
+                      endDate: value?.dateRange?.endDate
                     }
                   })
 
@@ -358,7 +348,7 @@ const InventoryProducts = () => {
               key={product.id}
               product={product}
               onEdit={handleEditProduct}
-              onDelete={confirmDelete}
+              onDelete={handleDeleteProduct}
               onAddStock={handleAddStock}
               onRemoveStock={handleRemoveStock}
             />
@@ -373,24 +363,6 @@ const InventoryProducts = () => {
           </p>
         </div>
       )}
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Êtes-vous sûr?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Cette action est irréversible. Le produit sera définitivement supprimé de l&apos;inventaire.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteProduct} className="bg-red-600 hover:bg-red-700">
-              Supprimer
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };

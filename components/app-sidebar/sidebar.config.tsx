@@ -54,7 +54,7 @@ export const sidebarItems: SidebarItem[] = [
     icon: <Image src="/orders.png" width={20} height={20} alt="" />,
     permission: "view:orders",
     items: [
-      { title: "Suppliers", url: "/orders/suppliers", permission: "view:order_suppliers" },
+      { title: "Suppliers", url: "/orders/supplier-orders", permission: "view:order_suppliers" },
       { title: "Customers", url: "/orders/customers", permission: "view:order_customers" },
     ],
   },

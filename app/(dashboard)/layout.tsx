@@ -1,3 +1,4 @@
+"use client"
 import { AppSidebar } from "@/components/app-sidebar"
 import { NavUser } from "@/components/app-sidebar/nav-user"
 import Initialize from "@/components/misc/initialize"
@@ -6,19 +7,45 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
-import { authOptions } from "@/lib/config/nextauth"
+import { getCurrentUser } from "@/lib/api/userApi"
+import { useUserStore } from "@/store/user.store"
 import { AlertTriangle, Bell, Search, Settings } from "lucide-react"
-import { getServerSession } from "next-auth"
-import { redirect } from "next/navigation"
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useState } from "react"
 
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const [loading, setLoading] = useState(false)
+  const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  const session = await getServerSession(authOptions);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const resp = await getCurrentUser();
+        if (resp.status === "failure") {
+          window.location.href = "/login";
+        } else {
+          setCurrentUser(resp.data);
+        }
+      } catch {
+        window.location.href = "/login";
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, [setCurrentUser]);
 
-  if (!session) {
-    redirect("/login")
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#f6f8fa]">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
+      </div>
+    )
   }
+  if (typeof window !== "undefined" && window.innerWidth < 768) {
+    return <Prompt />
+  }
+
+
   return (
     <>
       <Prompt />
@@ -57,7 +84,7 @@ const Prompt = () => {
     <div className=" fixed inset-0 z-[4000000000] w-full h-full bg-[#141313d9] place-content-center md:hidden grid">
       <div className="max-w-md flex flex-col justify-center items-center">
         <div className="flex gap-3 items-center mb-2">
-          <AlertTriangle className="text-3xl text-orange-600" strokeWidth={1}/>
+          <AlertTriangle className="text-3xl text-orange-600" strokeWidth={1} />
           <h3 className="text-2xl font-bold text-white">
             Accès limité
           </h3>

@@ -53,8 +53,7 @@ const SignIn = () => {
         throw result?.error;
       }
     } catch (error) {
-      console.log(error)
-      handleError({ error, message: "Login failed", dict: t });
+      handleError({ error, message: "Une erreur est survenue lors de la connexion. Veuillez vérifier vos identifiants et rééssayer", dict: t });
     } finally {
       setloading(false);
     }

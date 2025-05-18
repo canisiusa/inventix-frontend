@@ -42,6 +42,7 @@ import { useLocalization } from "@/providers/localization-provider";
 export interface AddStockMovementModalProps extends ContainerProps {
   isOpen: boolean;
   onResolve?: (data: any) => void;
+  warehouseId?: string;
   stock?: Stock;
   type?: "IN" | "OUT" | "ADJUSTMENT";
 }
@@ -100,7 +101,7 @@ function AddMovementModal(props: AddStockMovementModalProps) {
   };
 
   return (
-    <Dialog open={props.isOpen} onOpenChange={() => props.onReject?.("cancel")}>
+    <Dialog open={props.isOpen}>
       <DialogContent className="sm:max-w-[500px]">
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -127,11 +128,20 @@ function AddMovementModal(props: AddStockMovementModalProps) {
                 label="Produit"
                 placeholder="Sélectionner un produit"
                 onChange={(value) => {
-                  console.log(value);
                   setstock(value?.stock)
                 }}
                 fetcher={({ search, page, limit }) =>
-                  getProducts({ search, page, limit }).then((res) => res.data.data)
+                  getProducts({
+                    search, page, limit,
+                    ...(props.warehouseId ? { warehouseId: props.warehouseId } : {})
+                  }).then((res) => res.data).catch(() => {
+                    toast({
+                      title: "Erreur",
+                      description: "Erreur lors de la récupération des produits.",
+                      variant: "destructive",
+                    });
+                    return [];
+                  })
                 }
                 getId={(product) => product.stock?.id}
                 getLabel={(product) => product?.name}

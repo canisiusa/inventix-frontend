@@ -174,98 +174,96 @@ export function WarehousesTable({
   // Version desktop avec tableau
   return (
     <>
-      <div className="rounded-md border">
-        <AppTable
-          maxHeightClassName="max-h-[calc(100vh-14rem)]"
-          columnWidths={columnWidths}
-          tableWidth={tableWidth}
-          header={<TableRow>
-            <TableHead>Nom</TableHead>
-            <TableHead>Localisation</TableHead>
-            <TableHead className="text-center">Produits</TableHead>
-            <TableHead className="text-center">Stock faible</TableHead>
-            <TableHead>Dernière MAJ</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>}
-          body={
-            <>
-              {warehouses.map((warehouse) => (
-                <TableRow key={warehouse.id}>
-                  <TableCell className="font-medium">{warehouse.name}</TableCell>
-                  <TableCell>{warehouse.location || "—"}</TableCell>
-                  <TableCell className="text-center">
-                    {warehouse._count.stocks}
-                  </TableCell>
-                  <TableCell >
-                    <div className="flex items-center !justify-center">
+      <AppTable
+        maxHeightClassName="max-h-[calc(100vh-14rem)]"
+        columnWidths={columnWidths}
+        tableWidth={tableWidth}
+        header={<TableRow>
+          <TableHead>Nom</TableHead>
+          <TableHead>Localisation</TableHead>
+          <TableHead className="text-center">Produits</TableHead>
+          <TableHead className="text-center">Stock faible</TableHead>
+          <TableHead>Dernière MAJ</TableHead>
+          <TableHead>Actions</TableHead>
+        </TableRow>}
+        body={
+          <>
+            {warehouses.map((warehouse) => (
+              <TableRow key={warehouse.id}>
+                <TableCell className="font-medium">{warehouse.name}</TableCell>
+                <TableCell>{warehouse.location || "—"}</TableCell>
+                <TableCell className="text-center">
+                  {warehouse._count.stocks}
+                </TableCell>
+                <TableCell >
+                  <div className="flex items-center !justify-center">
                     {warehouse.lowStockIndicator ? (
                       <span className="text-destructive">Oui</span>
                     ) : (
                       "Non"
                     )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {format(warehouse.updatedAt, "dd/MM/yyyy", { locale: fr })}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onView(warehouse)}
-                        title="Voir"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onEdit(warehouse)}
-                        title="Modifier"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() => onAccessStock(warehouse)}
-                          >
-                            <PackageX className="mr-2 h-4 w-4" />
-                            Accéder au stock
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => {
-                            toast({
-                              title: "Export PDF",
-                              description: "Le fichier PDF a été généré avec succès.",
-                            });
-                          }}>
-                            <FileText className="mr-2 h-4 w-4" />
-                            Export PDF
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(warehouse)}
-                            className="text-destructive focus:text-destructive"
-                          >
-                            <Trash className="mr-2 h-4 w-4" />
-                            Supprimer
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </>
-          }
-        />
-      </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {format(warehouse.updatedAt, "dd/MM/yyyy", { locale: fr })}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onView(warehouse)}
+                      title="Voir"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onEdit(warehouse)}
+                      title="Modifier"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() => onAccessStock(warehouse)}
+                        >
+                          <PackageX className="mr-2 h-4 w-4" />
+                          Accéder au stock
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                          toast({
+                            title: "Export PDF",
+                            description: "Le fichier PDF a été généré avec succès.",
+                          });
+                        }}>
+                          <FileText className="mr-2 h-4 w-4" />
+                          Export PDF
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(warehouse)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash className="mr-2 h-4 w-4" />
+                          Supprimer
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </>
+        }
+      />
 
       <AlertDialog
         open={!!warehouseToDelete}

@@ -70,7 +70,7 @@ const AddCategoryModal = (props: AddCategoryModalProps) => {
   };
 
   return (
-    <Dialog open={props.isOpen} onOpenChange={() => props.onReject?.("cancel")}>
+    <Dialog open={props.isOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Ajouter une catégorie</DialogTitle>
@@ -112,6 +112,13 @@ const AddCategoryModal = (props: AddCategoryModalProps) => {
             />
 
             <DialogFooter>
+            <Button
+                type="button"
+                variant="outline"
+                onClick={() => props.onReject?.("cancel")}
+              >
+                Annuler
+              </Button>
               <Button loading={loading} type="submit">Ajouter la catégorie</Button>
             </DialogFooter>
           </form>

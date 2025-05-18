@@ -36,10 +36,10 @@ const LowQtyStock = () => {
         {products.length > 0 ? (
           products.map((product) => (
             <div key={product.id} className="h-[70px] justify-start items-center gap-[26px] inline-flex">
-              <img className="w-[60px] h-[70px] rounded" src={product.imageUrl || "https://placehold.co/60x70"} alt='' />
+              <img className="w-[60px] h-[70px] rounded" src={product.image || "https://placehold.co/60x70"} alt='' />
               <div className="flex-col justify-start items-start gap-1 inline-flex">
                 <div className="text-[#383e49] text-base font-semibold">{product.name}</div>
-                <div className="text-[#667085] text-sm font-normal">Remaining Quantity: {product.remainingQuantity}</div>
+                <div className="text-[#667085] text-sm font-normal">Remaining Quantity: {product.stock.quantity}</div>
               </div>
               <div className="mix-blend-multiply justify-start items-start flex">
                 <div className="pl-1.5 pr-2 py-0.5 bg-[#feeceb] rounded-2xl justify-center items-center gap-1 flex">

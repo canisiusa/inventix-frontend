@@ -10,6 +10,7 @@ interface ComboboxAsyncProps<TFormSchema extends FieldValues, TItem> {
   name: FieldPath<TFormSchema>;
   control: Control<TFormSchema>;
   label?: string;
+  disabled?: boolean;
   placeholder?: string;
   fetcher: (params: { search: string; page: number; limit: number }) => Promise<TItem[]>;
   limit?: number;
@@ -22,8 +23,9 @@ interface ComboboxAsyncProps<TFormSchema extends FieldValues, TItem> {
 export const ComboboxAsync = <TFormSchema extends FieldValues, TItem>({
   name,
   control,
-  label = "Sélection",
+  label,
   placeholder = "Rechercher...",
+  disabled,
   fetcher,
   limit = 20,
   onChange,
@@ -53,10 +55,11 @@ export const ComboboxAsync = <TFormSchema extends FieldValues, TItem>({
 
         return (
           <FormItem className="flex flex-col">
-            <FormLabel>{label}</FormLabel>
+            {label && <FormLabel>{label}</FormLabel>}
             <FormControl>
               <Combobox
                 value={field.value}
+                disabled={disabled}
                 onChange={(val) => {
                   field.onChange(val);
                   const found = items.find((i) => getId(i) === val);
@@ -72,7 +75,8 @@ export const ComboboxAsync = <TFormSchema extends FieldValues, TItem>({
                     }
                     placeholder={placeholder}
                     className={cn(
-                      "w-full border border-input bg-background rounded-md px-3 py-2 pr-10 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-0 focus:ring-ring focus:ring-offset-2"
+                      "w-full border border-input bg-background rounded-md px-3 py-2 pr-10 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-0 focus:ring-ring focus:ring-offset-2",
+                      disabled && "cursor-not-allowed opacity-50"
                     )}
                   />
                   <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">

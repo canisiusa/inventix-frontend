@@ -24,8 +24,25 @@ const WarehouseDetail = () => {
   const isMobile = useIsMobile();
 
   const [warehouse, setwarehouse] = useState<Warehouse>()
+
   const [stocks, setstocks] = useState<Stock[]>([])
-  const [movements, setmovements] = useState([])
+  // Pagination
+  const [paginationMeta, setPaginationMeta] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    perPage: 10,
+  });
+
+
+  const [movements, setmovements] = useState<StockMovement[]>([])
+  const [paginationMeta2, setPaginationMeta2] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    perPage: 10,
+  });
+
   const [loading, setloading] = useState(true)
 
   const [isTimelineView, setIsTimelineView] = useState(false);
@@ -48,24 +65,49 @@ const WarehouseDetail = () => {
     }
   };
 
-  const fetchStocks = async () => {
+  const fetchStocks = async (
+    search?: string,
+    currentPage?: number,
+    perPage?: number
+  ) => {
     try {
-      const resp = await getWarehouseStock(id);
-      if (resp.status === "failure") {
-        throw resp.data;
-      }
+      const resp = await getWarehouseStock(id, {
+        limit: perPage || paginationMeta.perPage,
+        page: currentPage || paginationMeta.currentPage,
+        search: search,
+      });
+      setPaginationMeta({
+        currentPage: resp.meta.currentPage,
+        totalPages: resp.meta.totalPages,
+        total: resp.meta.total,
+        perPage: resp.meta.perPage,
+      });
       setstocks(resp.data);
     } catch (error) {
       handleError({ error, message: "Impossible de charger les stocks.", dict: t })
     };
   }
 
-  const fetchStockMouvements = async () => {
+  const fetchStockMouvements = async (
+    search?: string,
+    currentPage?: number,
+    perPage?: number
+  ) => {
     try {
-      const resp = await getWarehouseMovements(id);
-      if (resp.status === "failure") {
-        throw resp.data;
-      }
+      const resp = await getWarehouseMovements(id, {
+        limit: perPage || paginationMeta2.perPage,
+        page: currentPage || paginationMeta2.currentPage,
+        search: search,
+        // exportCsv: true,
+      });
+      // saveAs(new Blob([resp as any], { type: 'text/csv;charset=utf-8;' }), 'warehouse_stock.csv');
+      setPaginationMeta2({
+        currentPage: resp.meta.currentPage,
+        totalPages: resp.meta.totalPages,
+        total: resp.meta.total,
+        perPage: resp.meta.perPage,
+      });
+
       setmovements(resp.data);
     } catch (error) {
       handleError({ error, message: "Impossible de charger les mouvements de stocks.", dict: t })
@@ -82,7 +124,8 @@ const WarehouseDetail = () => {
     try {
       await showAddStockMovementModal({
         isOpen: true,
-        stock: stock
+        stock: stock,
+        warehouseId: id,
       } as AddStockMovementModalProps);
       fetchStocks();
       fetchStockMouvements();
@@ -201,7 +244,6 @@ const WarehouseDetail = () => {
             </CardContent>
           </Card>
         </div>
-
         {/* Contenu principal */}
         <Tabs defaultValue="inventory">
           <TabsList>
@@ -221,23 +263,28 @@ const WarehouseDetail = () => {
                 <h2 className="text-xl font-semibold">Stock disponible</h2>
               </div>
 
-              {stocks.length > 0 ? (
-                <ProductsTable
-                  stocks={stocks}
-                  onAddMovement={handleAddStockMovement}
-                />
-              ) : (
-                <EmptyState
-                  title="Aucun produit en stock"
-                  description="Cet entrepôt ne contient actuellement aucun produit."
-                  icon="product"
-                  action={{
-                    label: "Ajouter un produit",
-                    onClick: () => handleAddProduct(),
-                  }}
-                  className="my-8"
-                />
-              )}
+              <ProductsTable
+                paginationMeta={paginationMeta}
+                stocks={stocks}
+                onAddMovement={handleAddStockMovement}
+                handlePageChange={(page, search) => {
+                  setPaginationMeta((prev) => ({
+                    ...prev,
+                    currentPage: page,
+                  }));
+                  fetchStocks(search, page);
+                }}
+                handleLimitChange={(limit, search) => {
+                  setPaginationMeta((prev) => ({
+                    ...prev,
+                    perPage: limit,
+                    currentPage: 1,
+                  }));
+                  fetchStocks(search, 1, limit);
+                }}
+                handleAddProduct={handleAddProduct}
+              />
+
             </div>
           </TabsContent>
 
@@ -267,23 +314,31 @@ const WarehouseDetail = () => {
                 </div>
               </div>
 
-              {movements.length > 0 ? (
-                isMobile || isTimelineView ? (
-                  <MovementsTimeline movements={movements} />
-                ) : (
-                  <MovementsTable movements={movements} />
-                )
+              {isMobile || isTimelineView ? (
+                <MovementsTimeline movements={movements} />
               ) : (
-                <EmptyState
-                  title="Aucun mouvement enregistré"
-                  description="Cet entrepôt n'a pas encore d'historique de mouvements de stock."
-                  action={{
-                    label: "Ajouter un mouvement",
-                    onClick: handleAddStockMovement,
+                <MovementsTable
+                  movements={movements}
+                  paginationMeta={paginationMeta2}
+                  handlePageChange={(page, search) => {
+                    setPaginationMeta2((prev) => ({
+                      ...prev,
+                      currentPage: page,
+                    }));
+                    fetchStockMouvements(search, page);
                   }}
-                  className="my-8"
+                  handleLimitChange={(limit, search) => {
+                    setPaginationMeta2((prev) => ({
+                      ...prev,
+                      perPage: limit,
+                      currentPage: 1,
+                    }));
+                    fetchStockMouvements(search, 1, limit);
+                  }}
+                  handleAddStockMovement={handleAddStockMovement}
                 />
-              )}
+              )
+              }
             </div>
           </TabsContent>
         </Tabs>

@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils';
 import { useCategoryStore } from '@/store/category.store';
 import { getStockStatus } from '@/utils/get-stockstatus';
 import { StockStatusBadge } from '@/components/misc/stock-status-badge';
+import Link from 'next/link';
+import { useUserStore } from '@/store/user.store';
 
 
 /*  const categories: Category[] = [
@@ -31,6 +33,9 @@ const StockCard = ({ product, onEdit, onDelete, onAddStock, onRemoveStock }: Sto
   const categories = useCategoryStore(state => state.categories);
 
   const category = categories.find(cat => cat.id === product.category.id) as Category;
+
+    const currentUser = useUserStore((state) => state.currentUser);
+  
 
   // Determine stock status
 
@@ -61,12 +66,16 @@ const StockCard = ({ product, onEdit, onDelete, onAddStock, onRemoveStock }: Sto
               className="mb-2"
               style={{ backgroundColor: category?.color, color: 'white' }}
             >
-              {category.name}
+              {category?.name}
             </Badge>
             <CardTitle className="text-lg">{product.name}</CardTitle>
           </div>
-         
-          <StockStatusBadge status={stockStatus} className="px-2 py-1 text-xs font-medium rounded-md" />
+          <Link href={`/inventory/warehouses/${product.stock.warehouseId}`}>
+            <StockStatusBadge
+              status={stockStatus}
+              className="px-2 py-1 text-xs font-medium rounded-md hover:underline transition-all duration-200 ease-in-out cursor-pointer"
+            />
+          </Link>
         </div>
       </CardHeader>
       <CardContent className="pb-4">
@@ -81,7 +90,7 @@ const StockCard = ({ product, onEdit, onDelete, onAddStock, onRemoveStock }: Sto
           </div>
           <div className="flex flex-col">
             <span className="text-gray-500">Prix unitaire:</span>
-            <span className="font-medium">{product.price.toFixed(2)} €</span>
+            <span className="font-medium">{product.price} {currentUser?.company.currency}</span>
           </div>
           {expiryInfo && (
             <div className="flex flex-col">

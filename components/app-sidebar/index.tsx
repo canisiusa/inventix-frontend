@@ -10,16 +10,22 @@ import {
   SidebarHeader,
   SidebarRail,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { NavAdmin } from "./nav-admin"
 import { NavMain } from "./nav-main"
 import { Logo } from "../icons"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { state } = useSidebar()
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Logo  />
+        {
+          state === 'expanded' ?
+            <Logo /> :
+            null
+        }
       </SidebarHeader>
       <SidebarContent>
         <NavMain />

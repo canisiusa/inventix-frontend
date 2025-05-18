@@ -24,29 +24,18 @@ export const getIpLocationData = async () => {
   return ipapiData;
 };
 
-
 export const handleError = async ({ error, message, dict }: { error: unknown, message: string, dict: Record<string, any> }) => {
-    if (typeof error === 'object' && error !== null && 'code' in error) {
+  if (error === 'cancel' || error === 'abort' || error === 'timeout') return;
+  if (typeof error === 'object' && error !== null && 'code' in error) {
     const apiError = error as ApiResponseError;
     toast({
-      description: dict.apicodes[apiError.code],
+      description: dict.apicodes[apiError.code as any],
       variant: "destructive",
     });
-  //  toast.error(dict.apicodes[apiError.code]);
-  } else if (error instanceof Error) {
+  } else {
     toast({
       description: message,
       variant: "destructive",
     });
-    // toast.error(message);
-  } else {
-    toast({
-      title: "Une erreur s'est produite",
-      description: "Veuillez réessayer plus tard.",
-      variant: "destructive",
-    });
-   /*  toast.error("Une erreur s'est produite", {
-      description: "Veuillez réessayer plus tard.",
-    }); */
   }
 };

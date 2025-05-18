@@ -37,6 +37,7 @@ import { ComboboxAsync } from '@/components/inputs/ComboboxAsync';
 import { getWarehouses } from '@/lib/api/warehouseApi';
 import { useEffect, useState } from 'react';
 import { GenericCombobox } from '@/components/inputs/GenericCombobox';
+import { useUserStore } from '@/store/user.store';
 
 
 const units = [
@@ -62,6 +63,7 @@ const units = [
 
 
 export interface ProductFormProps extends ContainerProps {
+  isOpen: boolean;
   onResolve?: (data: any) => void;
   onReject?: () => void;
   product?: Product;
@@ -72,7 +74,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
   const categories = useCategoryStore((state) => state.categories);
   const [loading, setloading] = useState(false)
   const { t } = useLocalization();
-  const [selectedWarehouse, setselectedWarehouse] = useState(props.warehouse || null);
+  const currentUser = useUserStore((state) => state.currentUser);
 
   const form = useForm<AddProductSchema>({
     resolver: zodResolver(AddProductSchema),
@@ -84,8 +86,8 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
       currentStock: props.product.stock?.quantity || 0,
       minimumStock: props.product.stock?.minimumStock || 0,
       price: props.product.price,
-      expiryDate: props.product.expiryDate,
-      supplierId: props.product.supplierId,
+      expiryDate: props.product.expiryDate || undefined,
+      supplierId: props.product.supplierId || undefined,
       description: '',
       sku: props.product.sku,
     } : {
@@ -98,7 +100,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
       supplierId: '',
       description: '',
       warehouseId: props.warehouse?.id,
-      sku: generateSKU("", props.warehouse?.name),
+      sku: generateSKU(""),
     },
   });
 
@@ -106,7 +108,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
   useEffect(() => {
     const subscription = form.watch((values, { name: changedField }) => {
       if (changedField === 'name') {
-        const newSku = generateSKU(values.name ?? "", selectedWarehouse?.name ?? "");
+        const newSku = generateSKU(values.name ?? "");
         form.setValue('sku', newSku, { shouldDirty: true });
       }
     });
@@ -114,18 +116,24 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
     return () => subscription.unsubscribe();
   }, [form]);
 
-  function generateSKU(name: string, warehouseId?: string): string {
+  function generateSKU(name: string): string {
     if (props.product) return props.product.sku;
+
     const getPart = (str: string | undefined, len: number, fallback = 'X') =>
       (str ?? '').toUpperCase().substring(0, len).padEnd(len, fallback);
 
-    const randomPart = Math.random().toString(36).substring(2, 5).toUpperCase(); // 3 lettres/chiffres
+    const now = new Date();
+    const yearHex = now.getFullYear().toString(16).toUpperCase();
+    const month = (now.getMonth() + 1).toString();
 
+    const datePart = `${yearHex}${month}`;
+
+    const randomPart = Math.floor(10 + Math.random() * 90).toString(); // 2 chiffres de 10 à 99
     const productPart = getPart(name, 3);
-    const warehousePart = getPart(warehouseId, 2);
 
-    return `${productPart}-${warehousePart}-${randomPart}`;
+    return `${datePart}-${productPart}${randomPart}`;
   }
+
 
 
   const handleAddProduct = async (data: AddProductSchema) => {
@@ -139,7 +147,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
         minimumStock: data.minimumStock,
         price: data.price,
         expiryDate: data.expiryDate || undefined,
-        supplierId: data.supplierId,
+        supplierId: data.supplierId || undefined,
         sku: data.sku,
         description: data.description,
         warehouseId: data.warehouseId,
@@ -174,8 +182,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
 
   return (
     <Dialog
-      open
-      onOpenChange={props.onReject}
+      open={props.isOpen}
     >
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
@@ -195,7 +202,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
                 handleAddProduct(data);
               }
             })}
-            className="space-y-6"
+            className="space-y-6 max-h-[600px] overflow-y-auto"
           >
             <div className="grid md:grid-cols-2 gap-4">
               <FormField
@@ -238,7 +245,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
                   <FormItem>
                     <FormLabel>Stock actuel</FormLabel>
                     <FormControl>
-                      <Input type="number" min="0" step="0.01" {...field} />
+                      <Input type="number" min="0" step="0.01" {...field} disabled={props.product ? true : false} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -250,7 +257,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
                 name="minimumStock"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Seuil minimum</FormLabel>
+                    <FormLabel>Seuil stock considéré comme critique</FormLabel>
                     <FormControl>
                       <Input type="number" min="0" step="0.01" {...field} />
                     </FormControl>
@@ -264,7 +271,7 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Prix unitaire (€)</FormLabel>
+                    <FormLabel>Prix unitaire ({currentUser?.company.currency})</FormLabel>
                     <FormControl>
                       <Input type="number" min="0" step="0.01" {...field} />
                     </FormControl>
@@ -278,9 +285,9 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
                 name="sku"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Identifiant unique</FormLabel>
+                    <FormLabel>Identifiant unique(sku)</FormLabel>
                     <FormControl>
-                      <Input type="text" {...field} disabled={props.product ? true : false} />
+                      <Input type="text" {...field} disabled={true} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -340,11 +347,6 @@ const ProductForm: React.FC<ProductFormProps> = (props: ProductFormProps) => {
                 control={form.control}
                 label="Entrepôt"
                 placeholder="Sélectionner un entrepôt"
-                onChange={(value) => {
-                  setselectedWarehouse(value ?? null);
-                  const newSku = generateSKU(form.getValues().name ?? "", value?.name ?? "");
-                  form.setValue('sku', newSku, { shouldDirty: true });
-                }}
                 fetcher={({ search, page, limit }) =>
                   getWarehouses({ search, page, limit }).then((res) => res.data.data)
                 }

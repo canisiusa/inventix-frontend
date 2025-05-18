@@ -8,8 +8,8 @@
 // 2- node generate-interface.js
 // Ensure you have Node.js installed on your system.
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
-var path = require("path");
+import * as fs from 'fs';
+import * as path from 'path';
 var inputFilePath = path.join(__dirname, 'fr.json');
 var outputFilePath = path.join(__dirname, '../../types/translations.interface.ts');
 console.log('inputFilePath', inputFilePath);

@@ -73,9 +73,7 @@ export const PolicyModal = () => {
   };
 
   return (
-    <Dialog open={modalOpen} onOpenChange={() => {
-      //setModalOpen(open);
-    }}>
+    <Dialog open={modalOpen}>
       <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden animate-scale-in">
         <DialogHeader className="p-6 pb-0">
           <div className="inline-flex items-center justify-center rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-2 animate-fade-in">

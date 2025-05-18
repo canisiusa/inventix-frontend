@@ -14,8 +14,8 @@ export const AddProductSchema = z.object({
     z.date() // ou une Date valide
   ])
   .optional(),
-  supplierId: z.string().min(1, { message: 'Veuillez sélectionner un fournisseur' }),
-  warehouseId: z.string().min(1, { message: 'Veuillez sélectionner un entrepôt' }),
+  supplierId: z.string().optional(),
+  warehouseId: z.string({message: "Champs requis"}).min(1, { message: 'Veuillez sélectionner un entrepôt' }),
   description: z.string().optional(),
   image: z.string().url().optional(),
 });

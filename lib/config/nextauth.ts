@@ -32,8 +32,6 @@ export const authOptions: AuthOptions = {
 
 
           if (!loginResponse.ok) {
-            console.log("Login failed:", backendTokens);
-
             return null;
           }
 
@@ -47,17 +45,24 @@ export const authOptions: AuthOptions = {
             },
           });
 
-          const user = await userResponse.json();
+          const companyUser = await userResponse.json();
 
           if (!userResponse.ok) {
-            console.log("Get user failed:", user);
             return null;
           }
 
           saveAccessToken(backendTokens.accessToken);
           saveRefreshToken(backendTokens.refreshToken);
           return {
-            user,
+            companyUser: {
+              id: companyUser.id,
+              name: companyUser.name,
+              userId: companyUser.userId,
+              companyId: companyUser.companyId,
+              roleId: companyUser.roleId,
+              user: companyUser.user,
+              
+            },
             backendTokens: {
               accessToken: backendTokens.accessToken,
               refreshToken: backendTokens.refreshToken,
@@ -92,14 +97,14 @@ export const authOptions: AuthOptions = {
     },
 
     async session({ token, session }) {
-      session.user = token.user;
+      session.companyUser = token.companyUser;
       session.backendTokens = token.backendTokens;
 
       return session;
     },
-    
+
   },
- // secret: process.env.NEXTAUTH_SECRET,
+  // secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },

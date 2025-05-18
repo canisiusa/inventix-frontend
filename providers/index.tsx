@@ -18,7 +18,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
       <ReactQueryProvider>
         <TooltipProvider>
-        {children}
+          {children}
         </TooltipProvider>
       </ReactQueryProvider>
     </ThemeProvider>

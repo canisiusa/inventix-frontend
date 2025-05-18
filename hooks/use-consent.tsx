@@ -3,47 +3,38 @@ import { editProfile, getCurrentUser } from "@/lib/api/userApi";
 import { UpdateUserSchema } from "@/lib/schemas/user.schemas";
 import { handleError } from "@/lib/utils";
 import { useLocalization } from "@/providers/localization-provider";
+import { useUserStore } from "@/store/user.store";
 import { useSession, } from "next-auth/react";
 import { useState, useEffect } from "react";
 
-type ConsentType = {
-  accepted: boolean;
-};
 
 export function useConsent() {
   const { data: session, update } = useSession();
-  const acceptTerms = session?.user?.acceptTerms ?? false;
+  const { t } = useLocalization();
 
-  const { t } = useLocalization()
+  const {currentUser, setCurrentUser} = useUserStore();
 
-  const [consent, setConsent] = useState<ConsentType>({
-    accepted: acceptTerms,
-  });
-
-  const [modalOpen, setModalOpen] = useState(!consent.accepted);
+  const accepted = currentUser?.user.acceptTerms;
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    if(!session) {
-      setModalOpen(false);
-      return;
-    }
-    if (acceptTerms !== consent.accepted) {
-      setConsent({ accepted: acceptTerms });
-      setModalOpen(!acceptTerms);
-    }
-  }, [acceptTerms, consent.accepted]);
+    setModalOpen(!accepted);
+  }, [accepted]);
+
+  // Si tu as besoin de "consent" quelque part, tu peux le calculer ici directement
+  const consent = { accepted };
 
   const acceptConsent = async (data: UpdateUserSchema) => {
     try {
       const result = await editProfile(data);
       if (result.status === 'success') {
-        setConsent({ accepted: true });
-        setModalOpen(false);
         const userResponse = await getCurrentUser();
         if (userResponse.status === 'success') {
           const user = userResponse.data;
-          const newSession = { ...session, user: user };
-          update(newSession);
+          const newSession = { ...session, companyUser: user };
+          await update(newSession);
+          setCurrentUser(user);
+          setModalOpen(false);
           return "Success";
         } else {
           throw userResponse.data;
@@ -58,12 +49,10 @@ export function useConsent() {
   };
 
   const declineConsent = () => {
-    setConsent({ accepted: false });
     setModalOpen(false);
   };
 
   const resetConsent = () => {
-    setConsent({ accepted: false });
     setModalOpen(true);
   };
 

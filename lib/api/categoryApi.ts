@@ -59,19 +59,13 @@ export const updateCategory = async (
 
 export const deleteCategory = async (
   id: string
-): Promise<{ data: any; status: 'success' | 'failure' }> => {
+): Promise<Category> => {
   try {
     const url = `${apiSuffix}/category/${id}`;
     const response = await apiClient.delete(url);
 
-    return {
-      data: response.data,
-      status: 'success',
-    };
+    return response.data;
   } catch (error: any) {
-    return {
-      status: 'failure',
-      data: error?.response?.data || error?.message,
-    };
+    throw error?.response?.data || error?.message;
   }
 };

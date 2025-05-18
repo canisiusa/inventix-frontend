@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
-import apiClient from "./axiosInstance";
 import { UpdateUserSchema } from "../schemas/user.schemas";
+import apiClient from "./axiosInstance(server)";
 
 const apiSuffix = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -18,7 +18,6 @@ export const editProfile = async (data: UpdateUserSchema) => {
       status: "success",
     };
   } catch (error:any) {
-    console.log(error);
     return  {
       status: "failure",
       data: error?.response?.data || error?.message,

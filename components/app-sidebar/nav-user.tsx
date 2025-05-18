@@ -57,10 +57,10 @@ export function NavUser() {
       <DropdownMenuTrigger asChild>
         <div className="flex items-center gap-2 px-1 py-1.5 text-sm cursor-pointer text-white hover:bg-[#425b76] rounded-lg">
           <Avatar className="h-5 w-5 rounded-full">
-            <AvatarImage src={"/avatar.png"} alt={session?.user.name} />
+            <AvatarImage src={"/avatar.png"} alt={session?.companyUser.name} />
             <AvatarFallback className="rounded-lg">CN</AvatarFallback>
           </Avatar>
-          <span className="truncate font-semibold text-sm">{session?.user.name}</span>
+          <span className="truncate font-semibold text-sm">{session?.companyUser.name}</span>
           <ChevronDown className="size-4" />
         </div>
       </DropdownMenuTrigger>
@@ -72,12 +72,12 @@ export function NavUser() {
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={'/avatar/png'} alt={session?.user.name} />
+              <AvatarImage src={'/avatar/png'} alt={session?.companyUser.name} />
               <AvatarFallback className="rounded-lg">CN</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">{session?.user.name}</span>
-              <span className="truncate text-xs">{session?.user.email}</span>
+              <span className="truncate font-semibold">{session?.companyUser.name}</span>
+              <span className="truncate text-xs">{session?.companyUser.user.email}</span>
             </div>
           </div>
         </DropdownMenuLabel>

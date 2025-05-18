@@ -29,7 +29,7 @@ const AppTable: React.FC<TableProps> = ({
   scrollDivRef,
 }) => {
   return (
-    <Container>
+    <Container className="overflow-x-auto rounded-md border">
       {/* Header Section */}
       <div className={cn(
         "rounded-t-lg overflow-hidden",
@@ -42,7 +42,7 @@ const AppTable: React.FC<TableProps> = ({
               <col key={index} style={{ width: `${width}px` }} />
             ))}
           </colgroup>
-          <TableHeader className="bg-primary-50 hover:bg-primary-200 text-sm !text-primary-900 font-semibold ">
+          <TableHeader className="bg-primary-50 text-sm !text-primary-900 font-semibold">
             {header}
           </TableHeader>
         </table>
@@ -57,7 +57,7 @@ const AppTable: React.FC<TableProps> = ({
           `w-[${tableWidth}px]`
         )}
       >
-        <table className="w-full border-gray-200 bg-white border-2 border-t-0 rounded-b-lg overflow-hidden">
+        <table className="w-full border-gray-200 bg-tranparent border-2 border-t-0 rounded-b-lg overflow-hidden">
         <colgroup>
             {columnWidths?.map((width, index) => (
               <col key={index} style={{ width: `${width}px` }} />

@@ -76,7 +76,7 @@ export default function CategoryManager() {
   return (
     <div className="p-4 space-y-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Gestion des catégories</h1>
+        <h1 className="text-2xl font-bold">Gestion des catégories</h1>
 
         <div className="flex gap-2">
           <Button

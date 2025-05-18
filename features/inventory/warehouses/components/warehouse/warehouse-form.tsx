@@ -79,7 +79,7 @@ function WarehouseForm({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => onReject?.("cancel")}>
+    <Dialog open={isOpen}>
       <DialogContent className="sm:max-w-[500px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>

@@ -129,7 +129,7 @@ const ImportSupplierModal = ({ isOpen, onReject, onResolve }: ImportSupplierModa
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => onReject?.("cancel")}>
+    <Dialog open={isOpen}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Importer des fournisseurs</DialogTitle>
@@ -222,7 +222,16 @@ const ImportSupplierModal = ({ isOpen, onReject, onResolve }: ImportSupplierModa
               </TableBody>
             </Table>
 
+          </>
+        )}
             <div className="flex justify-end gap-2 mt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onReject?.("cancel")}
+              >
+                Annuler
+              </Button>
               <Button
                 disabled={rows.filter((r) => r.errors.length === 0).length === 0 || loading}
                 onClick={handleImport}
@@ -230,8 +239,6 @@ const ImportSupplierModal = ({ isOpen, onReject, onResolve }: ImportSupplierModa
                 Importer les lignes valides
               </Button>
             </div>
-          </>
-        )}
       </DialogContent>
     </Dialog>
   );
